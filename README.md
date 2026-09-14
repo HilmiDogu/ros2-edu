@@ -40,6 +40,42 @@ ros2 run edu_py_examples talker              # module 01
 ros2 launch edu_bringup simulation.launch.py # module 02
 ```
 
+### Space: the Moon and Mars
+
+Two extra worlds ship a six-wheel **Perseverance-style rover** on a
+lunar or Martian surface, each with that body's real surface gravity
+(Moon 1.62, Mars 3.72 m/s²). Double-click **06 Moon Rover** or **07 Mars
+Rover**, or type:
+
+```bash
+ros2 launch edu_bringup simulation.launch.py world:=moon robot:=rover
+ros2 launch edu_bringup simulation.launch.py world:=mars robot:=rover
+```
+
+The rover keeps the exact frames, topics and differential-drive
+interface as EduBot, so every module (teleop, SLAM, the example nodes)
+works with it unchanged. `world:=` and `robot:=` are independent, so you
+can also drive EduBot on Mars or the rover in the classroom. To drive it
+(icon **03 Teleop**) or map it (icon **04 Navigation**), just start the
+Moon or Mars simulation first, then those icons attach to it.
+
+### Seeing the sensor and SLAM messages
+
+With a simulation running, in a **ROS 2 Terminal**:
+
+```bash
+ros2 topic list                 # every topic being published
+ros2 topic hz /scan             # how fast the lidar publishes
+ros2 topic echo /scan --once    # one lidar message
+ros2 topic echo /odom --once    # where the robot thinks it is
+ros2 topic echo /map --once --field info   # the SLAM map's size/resolution
+```
+
+`ros2 run edu_py_examples lidar_monitor` prints a friendly summary of the
+lidar instead of the raw message. For a live visual, the Gazebo and RViz
+windows in the desktop show the scan, camera, TF tree and the SLAM map as
+it builds (set RViz's *Fixed Frame* to `map` once mapping starts).
+
 The [usage guide](docs/usage.md) covers every module, the exercises, and
 how to re-run your own code after editing.
 

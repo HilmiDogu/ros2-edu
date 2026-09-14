@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=06 Moon Rover
+Comment=Six-wheel rover on the Moon in Gazebo with RViz2 (lunar gravity)
+Exec=/workspace/docker/desktop/launch_moon.sh
+Icon=applications-science
+Terminal=true
+Categories=Education;Robotics;

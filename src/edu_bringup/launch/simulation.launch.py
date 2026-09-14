@@ -9,6 +9,14 @@ Useful arguments:
     rviz:=false      start without RViz (lighter on slow machines)
     gui:=false       run Gazebo headless (no 3D window, sensors still run)
     world:=<name>    load a different world from edu_bringup/worlds
+                     (classroom | moon | mars)
+    robot:=<name>    which robot to spawn: edubot | rover
+
+The Moon and Mars worlds set their own (reduced) gravity and are the
+natural pairing for robot:=rover, but any robot works in any world -- the
+robot and the world are independent choices. Example:
+
+    ros2 launch edu_bringup simulation.launch.py world:=mars robot:=rover
 
 What this file actually starts, and why each part is needed:
 
@@ -39,12 +47,17 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
     world = LaunchConfiguration('world')
+    robot = LaunchConfiguration('robot')
     use_rviz = LaunchConfiguration('rviz')
     use_gui = LaunchConfiguration('gui')
 
     declare_world = DeclareLaunchArgument(
         'world', default_value='classroom',
-        description='World file to load from edu_bringup/worlds (without .sdf)')
+        description='World to load from edu_bringup/worlds, without .sdf: '
+                    'classroom | moon | mars')
+    declare_robot = DeclareLaunchArgument(
+        'robot', default_value='edubot',
+        description='Robot to spawn: edubot | rover')
     declare_rviz = DeclareLaunchArgument(
         'rviz', default_value='true',
         description='Start RViz2 alongside the simulation')
@@ -85,12 +98,16 @@ def generate_launch_description():
     # The robot is spawned into the world rather than written into the world
     # file, so the same world can be reused with a different robot, and so
     # students can re-spawn without restarting Gazebo.
+    # The model file and spawn name follow the robot argument, so the same
+    # launch spawns edubot or the rover from models/<robot>/model.sdf.
+    robot_sdf = PathJoinSubstitution(
+        [pkg_edu_bringup, 'models', robot, 'model.sdf'])
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
         arguments=[
-            '-file', os.path.join(pkg_edu_bringup, 'models', 'edubot', 'model.sdf'),
-            '-name', 'edubot',
+            '-file', robot_sdf,
+            '-name', robot,
             '-x', '-4.0', '-y', '-4.0', '-z', '0.15',
         ],
         output='screen',
@@ -136,8 +153,11 @@ def generate_launch_description():
     # -- 4. Robot state publisher -------------------------------------------
     # Reads the URDF and publishes the robot's transform tree. This is what
     # lets RViz draw the robot and place the lidar scan at the right spot.
+    # The URDF matching the spawned robot: models/<robot>.urdf.xacro.
+    robot_xacro = PathJoinSubstitution(
+        [pkg_edu_bringup, 'models', [robot, '.urdf.xacro']])
     robot_description = ParameterValue(
-        Command(['xacro ', os.path.join(pkg_edu_bringup, 'models', 'edubot.urdf.xacro')]),
+        Command(['xacro ', robot_xacro]),
         value_type=str,
     )
 
@@ -165,6 +185,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         declare_world,
+        declare_robot,
         declare_rviz,
         declare_gui,
         gz_sim,

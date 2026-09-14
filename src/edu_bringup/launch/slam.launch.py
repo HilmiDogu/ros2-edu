@@ -24,9 +24,13 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, EmitEvent, RegisterEventHandler
+from launch.events import matches_action
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
+from launch_ros.actions import LifecycleNode
+from launch_ros.event_handlers import OnStateTransition
+from launch_ros.events.lifecycle import ChangeState
+from lifecycle_msgs.msg import Transition
 
 
 def generate_launch_description():
@@ -36,10 +40,17 @@ def generate_launch_description():
         'use_sim_time', default_value='true',
         description='Use the Gazebo clock rather than the wall clock')
 
-    slam = Node(
+    # async_slam_toolbox_node is a *managed lifecycle* node: it starts
+    # 'unconfigured' and subscribes to nothing until it is transitioned to
+    # 'active'. Launching it alone (as a plain Node) leaves it inert -- no
+    # /scan subscription and no /map ever appears, with no error to
+    # explain why. So it must be a LifecycleNode and we must drive the
+    # configure -> activate transitions ourselves.
+    slam = LifecycleNode(
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
+        namespace='',
         output='screen',
         parameters=[
             os.path.join(pkg_edu_bringup, 'config', 'slam.yaml'),
@@ -47,4 +58,22 @@ def generate_launch_description():
         ],
     )
 
-    return LaunchDescription([declare_sim_time, slam])
+    # On startup, request 'configure'.
+    configure = EmitEvent(event=ChangeState(
+        lifecycle_node_matcher=matches_action(slam),
+        transition_id=Transition.TRANSITION_CONFIGURE,
+    ))
+
+    # Once it reports 'inactive' (i.e. configure succeeded), request
+    # 'activate' -- which is when it subscribes to /scan and starts
+    # publishing /map.
+    activate = RegisterEventHandler(OnStateTransition(
+        target_lifecycle_node=slam,
+        start_state='configuring', goal_state='inactive',
+        entities=[EmitEvent(event=ChangeState(
+            lifecycle_node_matcher=matches_action(slam),
+            transition_id=Transition.TRANSITION_ACTIVATE,
+        ))],
+    ))
+
+    return LaunchDescription([declare_sim_time, slam, configure, activate])
