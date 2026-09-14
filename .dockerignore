@@ -1,0 +1,11 @@
+# Keep the build context small and avoid baking host build artefacts into
+# the image. The workspace is bind-mounted at run time anyway.
+build/
+install/
+log/
+__pycache__/
+*.py[cod]
+.git/
+.vscode/
+.idea/
+docs/

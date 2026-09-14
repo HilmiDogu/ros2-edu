@@ -1,0 +1,34 @@
+services:
+  ros2-edu:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: ros2-gazebo-edu:jazzy
+    container_name: ros2-gazebo-edu
+    ports:
+      # Host port 6902, not the base image's default 6901, so this stack
+      # can run at the same time as another noVNC container (the Scilab
+      # GNC workspace uses 6901). Only the HOST side moves: inside the
+      # container noVNC still listens on 6901.
+      #
+      # Override without editing this file if 6902 is also taken:
+      #   NOVNC_PORT=6910 docker compose -f docker/docker-compose.yml up -d
+      - "${NOVNC_PORT:-6902}:6901"   # noVNC web client -> http://localhost:6902
+      - "${VNC_PORT:-5902}:5901"     # raw VNC client (optional, native viewer)
+    environment:
+      - VNC_PW=ros2edu
+      - VNC_RESOLUTION=1600x900
+    volumes:
+      # The whole workspace is bind-mounted, so edits made on the host in
+      # VS Code appear instantly inside the container and survive a
+      # `docker compose down`. Students never lose work to a container.
+      - ..:/workspace
+    # Gazebo's rendering and transport layers use shared memory heavily;
+    # Docker's 64MB default causes intermittent crashes on world load.
+    shm_size: "2gb"
+    # No `command:` on purpose -- the container runs the base image's
+    # desktop startup and stays up. The colcon build is done afterwards
+    # by up.sh, because startup.sh waits on its `vncserver` launcher PID:
+    # that launcher forks the real Xvnc and exits immediately, so a long
+    # startup command outlives it and triggers cleanup(), tearing the
+    # desktop down.

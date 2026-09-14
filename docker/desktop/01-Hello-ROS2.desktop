@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=01 Hello ROS 2
+Comment=Talker and listener: the core pub/sub demo
+Exec=/workspace/docker/desktop/launch_hello.sh
+Icon=utilities-terminal
+Terminal=true
+Categories=Education;Robotics;

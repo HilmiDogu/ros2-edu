@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=03 Teleop
+Comment=Drive the robot with the keyboard
+Exec=/workspace/docker/desktop/launch_teleop.sh
+Icon=input-keyboard
+Terminal=true
+Categories=Education;Robotics;

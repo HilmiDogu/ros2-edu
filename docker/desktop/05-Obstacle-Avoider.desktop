@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=05 Obstacle Avoider
+Comment=Autonomous reactive obstacle avoidance
+Exec=/workspace/docker/desktop/launch_avoider.sh
+Icon=applications-system
+Terminal=true
+Categories=Education;Robotics;

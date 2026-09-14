@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=02 Gazebo World
+Comment=EduBot in Gazebo with RViz2, lidar and camera
+Exec=/workspace/docker/desktop/launch_sim.sh
+Icon=applications-science
+Terminal=true
+Categories=Education;Robotics;

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ROS 2 Terminal
+Comment=A shell with ROS 2 already sourced
+Exec=/workspace/docker/desktop/launch_shell.sh
+Icon=utilities-terminal
+Terminal=true
+Categories=Education;Robotics;

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=04 Navigation
+Comment=SLAM mapping with slam_toolbox
+Exec=/workspace/docker/desktop/launch_slam.sh
+Icon=applications-internet
+Terminal=true
+Categories=Education;Robotics;

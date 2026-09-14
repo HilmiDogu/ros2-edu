@@ -1,0 +1,26 @@
+# Default: let git normalise text files to LF in the repository.
+* text=auto eol=lf
+
+# These MUST be LF. They run inside the Linux container, and a CRLF
+# shebang line fails with "bad interpreter: /usr/bin/env bash^M" -- an
+# error that is baffling the first time you meet it.
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.desktop       text eol=lf
+*.py            text eol=lf
+*.yaml          text eol=lf
+*.yml           text eol=lf
+*.xacro         text eol=lf
+*.sdf           text eol=lf
+*.urdf          text eol=lf
+*.rviz          text eol=lf
+Dockerfile      text eol=lf
+
+# Windows-only helper: CRLF is correct here.
+*.ps1           text eol=crlf
+
+# Never touch binaries.
+*.png           binary
+*.jpg           binary
+*.pdf           binary
+*.pgm           binary
