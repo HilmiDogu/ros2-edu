@@ -389,7 +389,15 @@
       <odom_topic>odom</odom_topic>
       <tf_topic>tf</tf_topic>
       <frame_id>odom</frame_id>
-      <child_frame_id>base_link</child_frame_id>
+      <!-- Publish odom -> base_footprint, NOT odom -> base_link. The URDF
+           already owns base_footprint -> base_link, and a TF frame may
+           have only one parent. If DiffDrive also parents base_link to
+           odom, base_link has two parents, the tree splits, and the SLAM
+           map (map -> odom -> base_footprint) cannot be tied to the
+           robot -- the symptom is a map that slides with the robot as it
+           drives. Parenting base_footprint here keeps a single chain:
+           map -> odom -> base_footprint -> base_link -> sensors. -->
+      <child_frame_id>base_footprint</child_frame_id>
       <max_linear_acceleration>2.0</max_linear_acceleration>
     </plugin>
 

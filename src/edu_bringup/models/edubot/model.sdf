@@ -266,7 +266,14 @@
       <odom_topic>odom</odom_topic>
       <tf_topic>tf</tf_topic>
       <frame_id>odom</frame_id>
-      <child_frame_id>base_link</child_frame_id>
+      <!-- odom -> base_footprint, NOT odom -> base_link: the URDF already
+           parents base_link to base_footprint, and a TF frame may have
+           only one parent. Publishing odom -> base_link too would give
+           base_link two parents, split the tree, and stop the SLAM map
+           (map -> odom -> base_footprint) from being tied to the robot --
+           the map then appears to slide as the robot drives. This keeps a
+           single chain: map -> odom -> base_footprint -> base_link. -->
+      <child_frame_id>base_footprint</child_frame_id>
       <max_linear_acceleration>2.0</max_linear_acceleration>
     </plugin>
 
