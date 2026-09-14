@@ -75,8 +75,13 @@
         <visual name="visual">
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
           <material>
-            <ambient>0.52 0.30 0.20 1</ambient>
-            <diffuse>0.62 0.36 0.24 1</diffuse>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>1.0 1.0 1.0 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://ground/materials/textures/mars_soil.png</albedo_map>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>

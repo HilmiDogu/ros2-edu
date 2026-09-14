@@ -75,10 +75,18 @@
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
         </collision>
         <visual name="visual">
+          <!-- The plane spans 100 m; the texture tiles every 4 m so the
+               regolith grain stays a believable size rather than being
+               stretched across the whole floor. -->
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
           <material>
-            <ambient>0.32 0.31 0.30 1</ambient>
-            <diffuse>0.42 0.41 0.40 1</diffuse>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>1.0 1.0 1.0 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://ground/materials/textures/moon_regolith.png</albedo_map>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
