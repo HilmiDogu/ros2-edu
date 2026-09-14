@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!--
+  The classroom world: a 12 x 12 m walled arena with a handful of
+  obstacles.
+
+  Closed walls are deliberate. An open plane gives a lidar nothing to
+  return and a SLAM map nothing to latch onto, so module 04 would show
+  students an empty grey map and look broken. Walls give every module
+  something to see.
+
+  Everything here is a primitive shape rather than a downloaded mesh, so
+  the world loads instantly and works with no network connection.
+-->
+<sdf version="1.9">
+  <world name="classroom">
+
+    <!-- Real-time factor 1.0 at 1 ms steps. If the simulation runs slow
+         on older student laptops, raise max_step_size to 0.004: fewer,
+         larger physics steps trade accuracy for speed. -->
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- The minimum plugin set. Omitting Physics gives you a frozen
+         world; omitting SceneBroadcaster gives you an empty GUI that
+         never shows the robot; omitting UserCommands means nothing can
+         be spawned into the world at runtime. -->
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <!-- Drives every <sensor> in the world. Without it the lidar and
+         camera exist in the description but never publish a message. -->
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu"/>
+
+    <gravity>0 0 -9.8</gravity>
+
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.7 0.8 0.9 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.3 -0.9</direction>
+    </light>
+
+    <!-- ===================== Ground ====================== -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ====================== Walls ====================== -->
+    <!-- Four static boxes forming a 12 x 12 m enclosure. -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.2 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.2 1</size></box></geometry>
+          <material><ambient>0.6 0.6 0.62 1</ambient><diffuse>0.7 0.7 0.72 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>12 0.2 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>12 0.2 1</size></box></geometry>
+          <material><ambient>0.6 0.6 0.62 1</ambient><diffuse>0.7 0.7 0.72 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 12 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 12 1</size></box></geometry>
+          <material><ambient>0.6 0.6 0.62 1</ambient><diffuse>0.7 0.7 0.72 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 12 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 12 1</size></box></geometry>
+          <material><ambient>0.6 0.6 0.62 1</ambient><diffuse>0.7 0.7 0.72 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ==================== Obstacles ==================== -->
+    <!-- Placed asymmetrically on purpose: a symmetric arena is ambiguous
+         to a SLAM algorithm, and students would see the map fold onto
+         itself without understanding why. -->
+    <model name="pillar_a">
+      <static>true</static>
+      <pose>2.5 1.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1</length></cylinder></geometry>
+          <material><ambient>0.7 0.3 0.2 1</ambient><diffuse>0.8 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="pillar_b">
+      <static>true</static>
+      <pose>-2.0 -2.5 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1</length></cylinder></geometry>
+          <material><ambient>0.7 0.3 0.2 1</ambient><diffuse>0.8 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_a">
+      <static>true</static>
+      <pose>-3.0 3.0 0.4 0 0 0.4</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.8 0.8 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.8 0.8 0.8</size></box></geometry>
+          <material><ambient>0.3 0.5 0.3 1</ambient><diffuse>0.35 0.6 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="box_b">
+      <static>true</static>
+      <pose>3.5 -3.0 0.4 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.8 0.8 0.8</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.8 0.8 0.8</size></box></geometry>
+          <material><ambient>0.3 0.5 0.3 1</ambient><diffuse>0.35 0.6 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- An interior divider, so the arena is not one convex blob and
+         the navigation stack has an actual corner to plan around. -->
+    <model name="divider">
+      <static>true</static>
+      <pose>0 2.0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 4 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 4 1</size></box></geometry>
+          <material><ambient>0.55 0.55 0.6 1</ambient><diffuse>0.65 0.65 0.7 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

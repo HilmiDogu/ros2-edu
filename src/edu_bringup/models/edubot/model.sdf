@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<!--
+  EduBot: a differential-drive robot for teaching.
+
+  Read this file top to bottom: it is the answer to "where does the robot
+  actually come from?". Every <link> is a rigid body, every <joint>
+  connects two links, and the <plugin> blocks at the bottom are what make
+  the wheels turn and the sensors publish.
+-->
+<sdf version="1.9">
+  <model name="edubot">
+    <pose>0 0 0.1 0 0 0</pose>
+
+    <!-- ===================== Chassis ===================== -->
+    <link name="base_link">
+      <inertial>
+        <mass>5.0</mass>
+        <!-- Box inertia for 0.4 x 0.25 x 0.1 m at m = 5 kg. Wrong
+             inertia is the most common cause of robots that jitter,
+             sink through the floor, or refuse to drive straight. -->
+        <inertia>
+          <ixx>0.0302</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.0708</iyy><iyz>0</iyz>
+          <izz>0.0927</izz>
+        </inertia>
+      </inertial>
+      <collision name="base_collision">
+        <geometry><box><size>0.4 0.25 0.1</size></box></geometry>
+      </collision>
+      <visual name="base_visual">
+        <geometry><box><size>0.4 0.25 0.1</size></box></geometry>
+        <material>
+          <ambient>0.2 0.35 0.6 1</ambient>
+          <diffuse>0.2 0.45 0.8 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ===================== Wheels ====================== -->
+    <!-- Rotated -pi/2 about X so the cylinder axis lies along Y. -->
+    <link name="left_wheel">
+      <pose>0 0.16 -0.03 -1.5707 0 0</pose>
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.000795</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.000795</iyy><iyz>0</iyz>
+          <izz>0.00125</izz>
+        </inertia>
+      </inertial>
+      <collision name="left_wheel_collision">
+        <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
+        </surface>
+      </collision>
+      <visual name="left_wheel_visual">
+        <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
+        <material>
+          <ambient>0.15 0.15 0.15 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <link name="right_wheel">
+      <pose>0 -0.16 -0.03 -1.5707 0 0</pose>
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.000795</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.000795</iyy><iyz>0</iyz>
+          <izz>0.00125</izz>
+        </inertia>
+      </inertial>
+      <collision name="right_wheel_collision">
+        <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
+        </surface>
+      </collision>
+      <visual name="right_wheel_visual">
+        <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
+        <material>
+          <ambient>0.15 0.15 0.15 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- A frictionless sphere instead of a third wheel: a caster free to
+         spin in every direction needs no joint of its own. -->
+    <link name="caster">
+      <pose>-0.15 0 -0.06 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>1.6e-5</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>1.6e-5</iyy><iyz>0</iyz>
+          <izz>1.6e-5</izz>
+        </inertia>
+      </inertial>
+      <collision name="caster_collision">
+        <geometry><sphere><radius>0.04</radius></sphere></geometry>
+        <surface>
+          <friction><ode><mu>0.0</mu><mu2>0.0</mu2></ode></friction>
+        </surface>
+      </collision>
+      <visual name="caster_visual">
+        <geometry><sphere><radius>0.04</radius></sphere></geometry>
+        <material><diffuse>0.3 0.3 0.3 1</diffuse></material>
+      </visual>
+    </link>
+
+    <joint name="left_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>left_wheel</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>
+      </axis>
+    </joint>
+
+    <joint name="right_wheel_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>right_wheel</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit><lower>-1e16</lower><upper>1e16</upper></limit>
+      </axis>
+    </joint>
+
+    <joint name="caster_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>caster</child>
+    </joint>
+
+    <!-- ===================== Sensors ===================== -->
+    <link name="lidar_link">
+      <pose>0.1 0 0.09 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>4e-5</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>4e-5</iyy><iyz>0</iyz>
+          <izz>4e-5</izz>
+        </inertia>
+      </inertial>
+      <visual name="lidar_visual">
+        <geometry><cylinder><radius>0.035</radius><length>0.04</length></cylinder></geometry>
+        <material><diffuse>0.8 0.2 0.1 1</diffuse></material>
+      </visual>
+      <!-- gz_frame_id sets frame_id on the published message. Without it
+           the scan arrives tagged with a frame RViz cannot find, and the
+           display silently stays empty with a TF error. -->
+      <sensor name="lidar" type="gpu_lidar">
+        <pose>0 0 0 0 0 0</pose>
+        <topic>scan</topic>
+        <gz_frame_id>lidar_link</gz_frame_id>
+        <update_rate>10</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.12</min>
+            <max>10.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>lidar_link</child>
+    </joint>
+
+    <link name="camera_link">
+      <pose>0.2 0 0.03 0 0 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>1e-5</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>1e-5</iyy><iyz>0</iyz>
+          <izz>1e-5</izz>
+        </inertia>
+      </inertial>
+      <visual name="camera_visual">
+        <geometry><box><size>0.02 0.06 0.04</size></box></geometry>
+        <material><diffuse>0.1 0.7 0.3 1</diffuse></material>
+      </visual>
+      <sensor name="camera" type="camera">
+        <topic>camera</topic>
+        <gz_frame_id>camera_link</gz_frame_id>
+        <update_rate>15</update_rate>
+        <always_on>true</always_on>
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <!-- 320x240 on purpose: there is no GPU behind the software
+                 renderer, and a larger image is what makes the whole
+                 simulation feel sluggish in the browser. -->
+            <width>320</width>
+            <height>240</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip><near>0.1</near><far>100</far></clip>
+        </camera>
+      </sensor>
+    </link>
+
+    <joint name="camera_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>camera_link</child>
+    </joint>
+
+    <link name="imu_link">
+      <pose>0 0 0.05 0 0 0</pose>
+      <inertial>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>1e-6</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>1e-6</iyy><iyz>0</iyz>
+          <izz>1e-6</izz>
+        </inertia>
+      </inertial>
+      <sensor name="imu" type="imu">
+        <topic>imu</topic>
+        <gz_frame_id>imu_link</gz_frame_id>
+        <update_rate>50</update_rate>
+        <always_on>true</always_on>
+      </sensor>
+    </link>
+
+    <joint name="imu_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>imu_link</child>
+    </joint>
+
+    <!-- ===================== Plugins ===================== -->
+    <!-- These are what turn a static description into a robot. -->
+
+    <!-- Subscribes to cmd_vel, turns the wheels, publishes odometry and
+         the odom -> base_link transform. -->
+    <plugin filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.32</wheel_separation>
+      <wheel_radius>0.07</wheel_radius>
+      <odom_publish_frequency>30</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>base_link</child_frame_id>
+      <max_linear_acceleration>2.0</max_linear_acceleration>
+    </plugin>
+
+    <!-- Reports wheel joint angles so robot_state_publisher and RViz can
+         animate the wheels rather than showing them frozen. -->
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+    </plugin>
+  </model>
+</sdf>
