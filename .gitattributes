@@ -24,3 +24,9 @@ Dockerfile      text eol=lf
 *.jpg           binary
 *.pdf           binary
 *.pgm           binary
+
+# Mesh assets (vendored from Gazebo Fuel). DAE is XML but treat it as
+# binary so line-ending normalisation never rewrites a downloaded mesh.
+*.dae           binary
+*.stl           binary
+*.obj           binary

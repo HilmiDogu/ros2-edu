@@ -205,39 +205,51 @@
     </model>
 
     <!-- ========================= Stones ========================= -->
-    <!-- Assorted sizes and tilts. Large boulders, medium rocks, pebbles. -->
-    <model name="stone_big1"><static>true</static><pose>-3.4 3.2 0.4 0.2 0.1 0.5</pose>
-      <link name="l"><collision name="c"><geometry><sphere><radius>0.45</radius></sphere></geometry></collision>
-        <visual name="v"><geometry><sphere><radius>0.45</radius></sphere></geometry>
-          <material><ambient>0.34 0.33 0.32 1</ambient><diffuse>0.44 0.43 0.42 1</diffuse></material></visual></link></model>
-    <model name="stone_big2"><static>true</static><pose>3.6 -3.4 0.35 0 0.15 0.9</pose>
-      <link name="l"><collision name="c"><geometry><box><size>0.7 0.6 0.7</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>0.7 0.6 0.7</size></box></geometry>
-          <material><ambient>0.31 0.30 0.29 1</ambient><diffuse>0.40 0.39 0.38 1</diffuse></material></visual></link></model>
-    <model name="stone_med1"><static>true</static><pose>0.5 -2.2 0.2 0.1 0.2 0.3</pose>
-      <link name="l"><collision name="c"><geometry><sphere><radius>0.22</radius></sphere></geometry></collision>
-        <visual name="v"><geometry><sphere><radius>0.22</radius></sphere></geometry>
-          <material><ambient>0.33 0.32 0.31 1</ambient><diffuse>0.43 0.42 0.41 1</diffuse></material></visual></link></model>
-    <model name="stone_med2"><static>true</static><pose>-1.0 1.2 0.18 0 0.1 1.2</pose>
-      <link name="l"><collision name="c"><geometry><box><size>0.35 0.3 0.35</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>0.35 0.3 0.35</size></box></geometry>
-          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual></link></model>
-    <model name="stone_med3"><static>true</static><pose>4.2 2.0 0.2 0.15 0 0.7</pose>
-      <link name="l"><collision name="c"><geometry><sphere><radius>0.25</radius></sphere></geometry></collision>
-        <visual name="v"><geometry><sphere><radius>0.25</radius></sphere></geometry>
-          <material><ambient>0.32 0.31 0.30 1</ambient><diffuse>0.42 0.41 0.40 1</diffuse></material></visual></link></model>
-    <model name="stone_small1"><static>true</static><pose>1.5 3.5 0.1 0 0 0.4</pose>
-      <link name="l"><collision name="c"><geometry><sphere><radius>0.12</radius></sphere></geometry></collision>
-        <visual name="v"><geometry><sphere><radius>0.12</radius></sphere></geometry>
-          <material><ambient>0.34 0.33 0.32 1</ambient><diffuse>0.44 0.43 0.42 1</diffuse></material></visual></link></model>
-    <model name="stone_small2"><static>true</static><pose>-4.0 -0.5 0.1 0 0 0</pose>
-      <link name="l"><collision name="c"><geometry><sphere><radius>0.13</radius></sphere></geometry></collision>
-        <visual name="v"><geometry><sphere><radius>0.13</radius></sphere></geometry>
-          <material><ambient>0.33 0.32 0.31 1</ambient><diffuse>0.43 0.42 0.41 1</diffuse></material></visual></link></model>
-    <model name="stone_small3"><static>true</static><pose>2.0 -0.8 0.09 0 0 0.9</pose>
-      <link name="l"><collision name="c"><geometry><box><size>0.18 0.16 0.16</size></box></geometry></collision>
-        <visual name="v"><geometry><box><size>0.18 0.16 0.16</size></box></geometry>
-          <material><ambient>0.31 0.30 0.29 1</ambient><diffuse>0.41 0.40 0.39 1</diffuse></material></visual></link></model>
+    <!-- Real rock meshes from Gazebo Fuel (vendored under models/rock1 and
+         models/rock6), placed at assorted positions, scales and rotations
+         so no two look alike. The meshes are ~1.5 m across natively, so a
+         scale of 0.006 gives a ~0.9 m boulder, 0.003 a ~0.45 m rock, and
+         0.0015 a knee-high stone. rock1 is chunky, rock6 is more angular. -->
+    <include>
+      <name>stone_big1</name><uri>model://rock1</uri>
+      <pose>-3.4 3.2 0.0 0.2 0.1 0.5</pose>
+      <scale>0.006 0.006 0.006</scale>
+    </include>
+    <include>
+      <name>stone_big2</name><uri>model://rock6</uri>
+      <pose>3.6 -3.4 0.0 0 0.15 0.9</pose>
+      <scale>0.0055 0.0055 0.0055</scale>
+    </include>
+    <include>
+      <name>stone_med1</name><uri>model://rock6</uri>
+      <pose>0.5 -2.2 0.0 0.1 0.2 0.3</pose>
+      <scale>0.003 0.003 0.003</scale>
+    </include>
+    <include>
+      <name>stone_med2</name><uri>model://rock1</uri>
+      <pose>-1.0 1.2 0.0 0 0.1 1.2</pose>
+      <scale>0.0028 0.0028 0.0028</scale>
+    </include>
+    <include>
+      <name>stone_med3</name><uri>model://rock1</uri>
+      <pose>4.2 2.0 0.0 0.15 0 0.7</pose>
+      <scale>0.0032 0.0032 0.0032</scale>
+    </include>
+    <include>
+      <name>stone_small1</name><uri>model://rock6</uri>
+      <pose>1.5 3.5 0.0 0 0 0.4</pose>
+      <scale>0.0016 0.0016 0.0016</scale>
+    </include>
+    <include>
+      <name>stone_small2</name><uri>model://rock1</uri>
+      <pose>-4.0 -0.5 0.0 0 0 0</pose>
+      <scale>0.0018 0.0018 0.0018</scale>
+    </include>
+    <include>
+      <name>stone_small3</name><uri>model://rock6</uri>
+      <pose>2.0 -0.8 0.0 0 0 0.9</pose>
+      <scale>0.0015 0.0015 0.0015</scale>
+    </include>
 
     <!-- ========================= Ridge ========================= -->
     <model name="ridge">

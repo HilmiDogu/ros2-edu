@@ -191,6 +191,13 @@ need a rebuild when you add a new file or change `setup.py`.
 - To add a module, add a node to `edu_py_examples`, register it in
   `setup.py`, and add a guide under `docs/`.
 
+## Credits
+
+The Moon and Mars worlds use the **Falling Rock** meshes by OpenRobotics
+from [Gazebo Fuel](https://app.gazebosim.org/OpenRobotics), licensed
+CC-BY. They are vendored under `src/edu_bringup/models/rock1` and
+`rock6` so the worlds load offline.
+
 ## Licence
 
 Apache-2.0.
