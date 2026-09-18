@@ -102,6 +102,29 @@ RUN printf '%s\n' \
     > /etc/profile.d/ros2.sh \
     && cat /etc/profile.d/ros2.sh >> /etc/bash.bashrc
 
+# --- Self-provisioning on desktop login ---------------------------------
+# The desktop icons and the colcon build live in the container's own
+# filesystem, not in the bind-mounted /workspace. Anyone who starts the
+# container without up.sh -- or recreates it after an image rebuild --
+# would otherwise get a bare desktop and a `ros2 run` that finds no
+# packages, which reads as a broken workspace rather than a missing
+# setup step.
+#
+# An Xfce autostart entry fixes that: the desktop provisions itself
+# however it was started. The script is cheap to re-run and never aborts
+# the session on failure.
+RUN mkdir -p /etc/xdg/autostart && \
+    printf '%s\n' \
+    '[Desktop Entry]' \
+    'Type=Application' \
+    'Name=ROS 2 workspace setup' \
+    'Comment=Install desktop launchers and build the colcon workspace' \
+    'Exec=/workspace/docker/autostart_setup.sh' \
+    'Terminal=false' \
+    'NoDisplay=true' \
+    'X-GNOME-Autostart-enabled=true' \
+    > /etc/xdg/autostart/ros2-edu-setup.desktop
+
 # Following the base image's documented extension pattern.
 RUN chmod 666 /etc/passwd /etc/group
 

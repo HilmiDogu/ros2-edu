@@ -225,15 +225,23 @@ ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{}"
 
 The desktop icons and the compiled workspace live inside the container,
 not in your project folder. Recreating the container (`docker compose
-down` then `up`, or an image rebuild) discards both, and the desktop
-comes up bare.
+down` then `up`, or an image rebuild) discards both.
+
+The container rebuilds them for itself when the desktop starts, so
+normally you just **wait 30–60 seconds after first connecting and reload
+the browser tab**. Check on it with:
+
+```bash
+docker exec ros2-gazebo-edu cat /tmp/autostart_setup.log
+```
+
+To force it by hand:
 
 ```bash
 docker exec ros2-gazebo-edu /workspace/docker/setup_desktop.sh
 ```
 
 Right-click the desktop → **Reload** if the icons do not appear at once.
-Re-running `up.sh` / `up.ps1` does the same thing.
 
 ---
 

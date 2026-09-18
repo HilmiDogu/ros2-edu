@@ -8,15 +8,24 @@
 # environment.
 source /opt/ros/jazzy/setup.bash
 
-if [ -f /workspace/install/setup.bash ]; then
-    source /workspace/install/setup.bash
-else
-    echo "The workspace has not been built yet."
-    echo "Run:  /workspace/docker/build_ws.sh"
+# Build on demand rather than just complaining. The autostart hook
+# normally has this done before anyone can click an icon, but a student
+# who is quick off the mark -- or whose container was started without
+# up.sh -- would otherwise meet a dead end on their first double-click.
+if [ ! -f /workspace/install/setup.bash ]; then
+    echo "The ROS workspace has not been built yet. Building it now."
+    echo "This takes about 30 seconds, and only happens once."
     echo
-    read -rp "Press Enter to close..."
-    exit 1
+    if ! /workspace/docker/build_ws.sh; then
+        echo
+        echo "The build FAILED. The output above says why."
+        read -rp "Press Enter to close..."
+        exit 1
+    fi
+    echo
 fi
+
+source /workspace/install/setup.bash
 
 export GZ_SIM_RESOURCE_PATH=/workspace/src/edu_bringup/models
 

@@ -46,19 +46,40 @@ docker ps --format '{{.Names}}\t{{.Ports}}'    # another container?
 netstat -ano | Select-String ':6902'           # any process
 ```
 
-### The desktop has no numbered icons
+### No icons on the desktop, and `ros2 run` finds nothing
 
-The container was recreated (an image rebuild, or `down` then `up`)
-without the setup step. Icons and the colcon build live in the
-container's own filesystem, not in the bind-mounted `/workspace`, so
-recreating the container discards both.
+These two always appear together, and they have one cause: the desktop
+icons and the compiled workspace live in the **container's** filesystem,
+not in the cloned project folder. A container that was started without
+`up.sh` / `up.ps1` — or recreated after an image rebuild — has neither.
+
+The container provisions itself on desktop login, so the usual fix is
+simply to **wait 30–60 seconds and reload the browser tab**: the icons
+appear once the background build finishes. Watch its progress with
+
+```bash
+docker exec ros2-gazebo-edu cat /tmp/autostart_setup.log
+```
+
+If they still do not appear, do it by hand:
 
 ```bash
 docker exec ros2-gazebo-edu /workspace/docker/setup_desktop.sh
 ```
 
-Right-click the desktop → **Reload** if they do not appear at once.
-Re-running `up.sh` / `up.ps1` also fixes it.
+Then right-click the desktop → **Reload**.
+
+If that reports the workspace is built but `ros2 run` still fails, the
+build itself is broken — rerun it and read the error:
+
+```bash
+docker exec ros2-gazebo-edu /workspace/docker/build_ws.sh
+```
+
+> **Older images.** Self-provisioning arrived after the first release. If
+> `/tmp/autostart_setup.log` does not exist, your image predates it:
+> rebuild with `docker compose -f docker/docker-compose.yml build`, or
+> just keep using `setup_desktop.sh` after each start.
 
 ### The build fails downloading packages
 
