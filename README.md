@@ -23,6 +23,14 @@ cd ros2-gazebo-edu-max
 
 .\docker\up.ps1          # Windows PowerShell
 ```
+> 💡 **Troubleshooting (Windows Execution Policy Error):**
+> If you get an error saying `File ... cannot be loaded because running scripts is disabled on this system`, run the following command in PowerShell to allow script execution for your current session, then try again:
+> ```powershell
+>Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+>```
+>```powershell
+>.\docker\up.ps1
+>```
 
 ```bash
 git clone <this-repository>

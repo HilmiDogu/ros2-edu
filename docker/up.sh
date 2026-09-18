@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 # Build and start the educational ROS 2 + Gazebo workspace.
 #
