@@ -71,6 +71,15 @@
       <link name="link">
         <collision name="collision">
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <!-- Explicit high friction; see the same block in moon.sdf.
+               Martian gravity is 3.72 m/s^2, so the rover has well under
+               half its Earth weight and the default surface leaves too
+               little friction to convert wheel torque into motion. -->
+          <surface>
+            <friction>
+              <ode><mu>2.0</mu><mu2>2.0</mu2></ode>
+            </friction>
+          </surface>
         </collision>
         <visual name="visual">
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>

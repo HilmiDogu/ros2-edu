@@ -73,6 +73,20 @@
       <link name="link">
         <collision name="collision">
           <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <!-- Explicit high friction. Without a <surface> block the plane
+               takes Gazebo's default, which is far too slippery at lunar
+               gravity: the rover weighs about a sixth of its Earth weight,
+               so the normal force -- and with it the friction available to
+               turn wheel torque into motion -- collapses. The wheels spin
+               at the commanded speed and the rover does not move, which
+               looks like a broken drive plugin rather than a traction
+               problem. Regolith is in fact grippy, so a high mu is also
+               the physically honest choice. -->
+          <surface>
+            <friction>
+              <ode><mu>2.0</mu><mu2>2.0</mu2></ode>
+            </friction>
+          </surface>
         </collision>
         <visual name="visual">
           <!-- The plane spans 100 m; the texture tiles every 4 m so the
