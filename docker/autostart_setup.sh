@@ -34,6 +34,26 @@ if [ -d /workspace/docker/desktop ]; then
             "$(sha256sum "$f" | cut -d' ' -f1)" 2>/dev/null || true
     done
     echo "[autostart] icons installed"
+
+    # Make sure Xfce actually DRAWS them. On a fresh profile
+    # /desktop-icons/style is unset, and whether launchers appear is then
+    # left to the default -- which has been observed to differ between
+    # machines, giving one student a full desktop and another a bare one
+    # from identical files. Setting it explicitly removes that variable.
+    #   0 = none, 1 = minimised windows, 2 = file/launcher icons
+    export DISPLAY="${DISPLAY:-:1}"
+    xfconf-query -c xfce4-desktop -p /desktop-icons/style \
+        -n -t int -s 2 2>/dev/null || true
+
+    # Hide the stock Home/Filesystem/Trash icons so the numbered course
+    # launchers are the only things on the desktop.
+    for prop in show-home show-filesystem show-trash show-removable; do
+        xfconf-query -c xfce4-desktop -p "/desktop-icons/file-icons/${prop}" \
+            -n -t bool -s false 2>/dev/null || true
+    done
+
+    # Redraw, in case the desktop was already running when this ran.
+    xfdesktop --reload 2>/dev/null || true
 else
     echo "[autostart] WARNING: /workspace/docker/desktop missing."
     echo "[autostart] Is the project directory bind-mounted at /workspace?"

@@ -24,6 +24,20 @@ for f in "$HOME"/Desktop/*.desktop; do
         "$(sha256sum "$f" | cut -d' ' -f1)" 2>/dev/null || true
 done
 
+# Make sure Xfce actually DRAWS them: on a fresh profile
+# /desktop-icons/style is unset, and the default has been observed to
+# differ between machines -- identical files, bare desktop on one and a
+# full one on another.
+#   0 = none, 1 = minimised windows, 2 = file/launcher icons
+export DISPLAY="${DISPLAY:-:1}"
+xfconf-query -c xfce4-desktop -p /desktop-icons/style \
+    -n -t int -s 2 2>/dev/null || true
+for prop in show-home show-filesystem show-trash show-removable; do
+    xfconf-query -c xfce4-desktop -p "/desktop-icons/file-icons/${prop}" \
+        -n -t bool -s false 2>/dev/null || true
+done
+xfdesktop --reload 2>/dev/null || true
+
 echo "[setup] icons installed:"
 ls -1 "$HOME/Desktop"/*.desktop | xargs -n1 basename
 
