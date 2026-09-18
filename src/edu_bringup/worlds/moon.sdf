@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<!--
+  The Moon world: a 12 x 12 m walled lunar site with craters and stones.
+
+  Same teaching shape as classroom.sdf - a closed arena so the lidar
+  always has something to return and SLAM has something to latch onto -
+  but the interior is now lunar terrain rather than boxes and pillars:
+
+    * two CRATERS, each a raised circular rim built from eight angled
+      wall segments. A lidar sweeping past reads the rim as a ring of
+      returns, so on the SLAM map a crater shows up as a circle - exactly
+      what you want students to recognise.
+    * STONES of several sizes scattered around, as spheres and low
+      boxes, tilted at assorted angles so no two look alike.
+    * a low RIDGE of regolith, so the arena is not one convex blob and
+      navigation has a real corner to plan around.
+
+  Differences from classroom.sdf that make it the Moon:
+    1. gravity is the Moon's 1.62 m/s^2 (Earth is 9.8).
+    2. the scene is dark with a near-black airless sky.
+    3. everything is grey regolith.
+
+  Everything is still primitive shapes, so it loads instantly and works
+  offline, exactly like the rest of this workspace.
+
+  NOTE on low gravity: a light robot in 1/6 g has less wheel grip, so it
+  drives more sluggishly and can slip. That is physically correct and is
+  the point of switching worlds - not a bug.
+-->
+<sdf version="1.9">
+  <world name="moon">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu"/>
+
+    <!-- Lunar surface gravity. -->
+    <gravity>0 0 -1.62</gravity>
+
+    <!-- Airless, high-contrast lunar lighting: near-black sky, low
+         ambient, one strong "sun". -->
+    <scene>
+      <ambient>0.25 0.25 0.25 1</ambient>
+      <background>0.02 0.02 0.03 1</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1.0 1.0 0.98 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.4 0.2 -0.9</direction>
+    </light>
+
+    <!-- ===================== Regolith ground ====================== -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <!-- The plane spans 100 m; the texture tiles every 4 m so the
+               regolith grain stays a believable size rather than being
+               stretched across the whole floor. -->
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>1.0 1.0 1.0 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://ground/materials/textures/moon_regolith.png</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ====================== Compound walls ====================== -->
+    <!-- Low regolith berms forming the 12 x 12 m enclosure boundary. -->
+    <model name="wall_north">
+      <static>true</static><pose>0 6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>12 0.2 1</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>12 0.2 1</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="wall_south">
+      <static>true</static><pose>0 -6 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>12 0.2 1</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>12 0.2 1</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="wall_east">
+      <static>true</static><pose>6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.2 12 1</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 12 1</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+      </link>
+    </model>
+    <model name="wall_west">
+      <static>true</static><pose>-6 0 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.2 12 1</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.2 12 1</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ========================= Crater 1 ========================= -->
+    <!-- Centre (2.6, 1.8), rim radius ~1.4 m. Eight rim segments, each a
+         short box tangent to the circle and pitched outward so it reads
+         as a sloped bowl rim. The segment poses are the eight compass
+         points around the centre. -->
+    <model name="crater1">
+      <static>true</static>
+      <pose>2.6 1.8 0 0 0 0</pose>
+      <link name="link">
+        <!-- E -->
+        <collision name="c0"><pose>1.4 0 0.15 0 -0.5 1.5708</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v0"><pose>1.4 0 0.15 0 -0.5 1.5708</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- NE -->
+        <collision name="c1"><pose>0.99 0.99 0.15 0 -0.5 2.356</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v1"><pose>0.99 0.99 0.15 0 -0.5 2.356</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- N -->
+        <collision name="c2"><pose>0 1.4 0.15 0 -0.5 0</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v2"><pose>0 1.4 0.15 0 -0.5 0</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- NW -->
+        <collision name="c3"><pose>-0.99 0.99 0.15 0 -0.5 0.785</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v3"><pose>-0.99 0.99 0.15 0 -0.5 0.785</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- W -->
+        <collision name="c4"><pose>-1.4 0 0.15 0 -0.5 1.5708</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v4"><pose>-1.4 0 0.15 0 -0.5 1.5708</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- SW -->
+        <collision name="c5"><pose>-0.99 -0.99 0.15 0 -0.5 2.356</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v5"><pose>-0.99 -0.99 0.15 0 -0.5 2.356</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- S -->
+        <collision name="c6"><pose>0 -1.4 0.15 0 -0.5 0</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v6"><pose>0 -1.4 0.15 0 -0.5 0</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+        <!-- SE -->
+        <collision name="c7"><pose>0.99 -0.99 0.15 0 -0.5 0.785</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry></collision>
+        <visual name="v7"><pose>0.99 -0.99 0.15 0 -0.5 0.785</pose><geometry><box><size>1.1 0.25 0.5</size></box></geometry>
+          <material><ambient>0.30 0.29 0.28 1</ambient><diffuse>0.39 0.38 0.37 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ========================= Crater 2 ========================= -->
+    <!-- Smaller crater, centre (-2.8, -2.6), rim radius ~1.0 m. -->
+    <model name="crater2">
+      <static>true</static>
+      <pose>-2.8 -2.6 0 0 0 0</pose>
+      <link name="link">
+        <collision name="c0"><pose>1.0 0 0.12 0 -0.5 1.5708</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v0"><pose>1.0 0 0.12 0 -0.5 1.5708</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c1"><pose>0.71 0.71 0.12 0 -0.5 2.356</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v1"><pose>0.71 0.71 0.12 0 -0.5 2.356</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c2"><pose>0 1.0 0.12 0 -0.5 0</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v2"><pose>0 1.0 0.12 0 -0.5 0</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c3"><pose>-0.71 0.71 0.12 0 -0.5 0.785</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v3"><pose>-0.71 0.71 0.12 0 -0.5 0.785</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c4"><pose>-1.0 0 0.12 0 -0.5 1.5708</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v4"><pose>-1.0 0 0.12 0 -0.5 1.5708</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c5"><pose>-0.71 -0.71 0.12 0 -0.5 2.356</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v5"><pose>-0.71 -0.71 0.12 0 -0.5 2.356</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c6"><pose>0 -1.0 0.12 0 -0.5 0</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v6"><pose>0 -1.0 0.12 0 -0.5 0</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+        <collision name="c7"><pose>0.71 -0.71 0.12 0 -0.5 0.785</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry></collision>
+        <visual name="v7"><pose>0.71 -0.71 0.12 0 -0.5 0.785</pose><geometry><box><size>0.8 0.22 0.4</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.38 0.37 0.36 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ========================= Stones ========================= -->
+    <!-- Real rock meshes from Gazebo Fuel (vendored under models/rock1 and
+         models/rock6), placed at assorted positions, scales and rotations
+         so no two look alike. The meshes are ~1.5 m across natively, so a
+         scale of 0.006 gives a ~0.9 m boulder, 0.003 a ~0.45 m rock, and
+         0.0015 a knee-high stone. rock1 is chunky, rock6 is more angular. -->
+    <include>
+      <name>stone_big1</name><uri>model://rock1</uri>
+      <pose>-3.4 3.2 0.0 0.2 0.1 0.5</pose>
+      <scale>0.006 0.006 0.006</scale>
+    </include>
+    <include>
+      <name>stone_big2</name><uri>model://rock6</uri>
+      <pose>3.6 -3.4 0.0 0 0.15 0.9</pose>
+      <scale>0.0055 0.0055 0.0055</scale>
+    </include>
+    <include>
+      <name>stone_med1</name><uri>model://rock6</uri>
+      <pose>0.5 -2.2 0.0 0.1 0.2 0.3</pose>
+      <scale>0.003 0.003 0.003</scale>
+    </include>
+    <include>
+      <name>stone_med2</name><uri>model://rock1</uri>
+      <pose>-1.0 1.2 0.0 0 0.1 1.2</pose>
+      <scale>0.0028 0.0028 0.0028</scale>
+    </include>
+    <include>
+      <name>stone_med3</name><uri>model://rock1</uri>
+      <pose>4.2 2.0 0.0 0.15 0 0.7</pose>
+      <scale>0.0032 0.0032 0.0032</scale>
+    </include>
+    <include>
+      <name>stone_small1</name><uri>model://rock6</uri>
+      <pose>1.5 3.5 0.0 0 0 0.4</pose>
+      <scale>0.0016 0.0016 0.0016</scale>
+    </include>
+    <include>
+      <name>stone_small2</name><uri>model://rock1</uri>
+      <pose>-4.0 -0.5 0.0 0 0 0</pose>
+      <scale>0.0018 0.0018 0.0018</scale>
+    </include>
+    <include>
+      <name>stone_small3</name><uri>model://rock6</uri>
+      <pose>2.0 -0.8 0.0 0 0 0.9</pose>
+      <scale>0.0015 0.0015 0.0015</scale>
+    </include>
+
+    <!-- ========================= Ridge ========================= -->
+    <model name="ridge">
+      <static>true</static><pose>0 3.4 0.4 0 0 0.15</pose>
+      <link name="link">
+        <collision name="c"><geometry><box><size>0.4 3 0.8</size></box></geometry></collision>
+        <visual name="v"><geometry><box><size>0.4 3 0.8</size></box></geometry>
+          <material><ambient>0.29 0.28 0.27 1</ambient><diffuse>0.37 0.36 0.35 1</diffuse></material></visual>
+      </link>
+    </model>
+  </world>
+</sdf>

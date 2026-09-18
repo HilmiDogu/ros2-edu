@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=07 Mars Rover
+Comment=Six-wheel rover on Mars in Gazebo with RViz2 (Martian gravity)
+Exec=/workspace/docker/desktop/launch_mars.sh
+Icon=applications-science
+Terminal=true
+Categories=Education;Robotics;

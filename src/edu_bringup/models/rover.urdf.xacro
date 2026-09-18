@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!--
+  The rover, described a second time - this time in URDF.
+
+  Why twice? Gazebo simulates from model.sdf; ROS 2 reasons about the
+  robot from this URDF. robot_state_publisher reads this file and
+  broadcasts the fixed transforms (base_link -> lidar_link, camera_link,
+  imu_link) plus the moving wheel transforms it derives from
+  /joint_states. RViz needs those transforms to place sensor data.
+
+  The dimensions here MUST match models/rover/model.sdf. If you change a
+  wheel radius or position in one file, change it in the other, or the
+  rover RViz draws will drift away from the rover Gazebo simulates.
+
+  Frames are deliberately identical to edubot.urdf.xacro (base_link,
+  base_footprint, lidar_link, camera_link, imu_link, left_wheel,
+  right_wheel) so every downstream module works unchanged.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rover">
+
+  <!-- Single source of truth for the numbers shared with model.sdf. -->
+  <xacro:property name="wheel_radius"     value="0.07"/>
+  <xacro:property name="wheel_width"      value="0.05"/>
+  <xacro:property name="wheel_separation" value="0.48"/>
+  <xacro:property name="wheel_x"          value="0.22"/>
+  <xacro:property name="base_length"      value="0.6"/>
+  <xacro:property name="base_width"       value="0.4"/>
+  <xacro:property name="base_height"      value="0.12"/>
+
+  <material name="rover_body"> <color rgba="0.80 0.68 0.42 1"/></material>
+  <material name="deck">       <color rgba="0.12 0.16 0.35 1"/></material>
+  <material name="dark">       <color rgba="0.18 0.18 0.18 1"/></material>
+  <material name="mast">       <color rgba="0.40 0.40 0.42 1"/></material>
+  <material name="red">        <color rgba="0.8 0.2 0.1 1"/></material>
+  <material name="green">      <color rgba="0.1 0.7 0.3 1"/></material>
+
+  <!-- base_footprint sits on the ground directly under base_link. Nav2
+       and most navigation tooling expect this frame to exist. -->
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
+      <material name="rover_body"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0 0.08" rpy="0 0 0"/>
+      <geometry><box size="0.5 0.34 0.02"/></geometry>
+      <material name="deck"/>
+    </visual>
+    <collision>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="8.0"/>
+      <inertia ixx="0.1163" ixy="0" ixz="0" iyy="0.2496" iyz="0" izz="0.3067"/>
+    </inertial>
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child  link="base_link"/>
+    <origin xyz="0 0 0.12" rpy="0 0 0"/>
+  </joint>
+
+  <!-- One macro for all six wheels. x/y are the wheel-centre offsets from
+       base_link; the driven middle pair uses x = 0. -->
+  <xacro:macro name="wheel" params="name x y">
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+        <material name="dark"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5707 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.6"/>
+        <inertia ixx="0.00098" ixy="0" ixz="0" iyy="0.00098" iyz="0" izz="0.00147"/>
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint" type="continuous">
+      <parent link="base_link"/>
+      <child  link="${name}"/>
+      <origin xyz="${x} ${y} -0.05" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Driven middle pair (must be named left_wheel / right_wheel to match
+       the DiffDrive plugin joints in model.sdf). -->
+  <xacro:wheel name="left_wheel"  x="0"          y="${ wheel_separation/2}"/>
+  <xacro:wheel name="right_wheel" x="0"          y="${-wheel_separation/2}"/>
+  <!-- Free-spinning corners. -->
+  <xacro:wheel name="front_left_wheel"  x="${ wheel_x}" y="${ wheel_separation/2}"/>
+  <xacro:wheel name="front_right_wheel" x="${ wheel_x}" y="${-wheel_separation/2}"/>
+  <xacro:wheel name="rear_left_wheel"   x="${-wheel_x}" y="${ wheel_separation/2}"/>
+  <xacro:wheel name="rear_right_wheel"  x="${-wheel_x}" y="${-wheel_separation/2}"/>
+
+  <!-- Sensor mast: a vertical post carrying the camera up high. -->
+  <link name="mast_link">
+    <visual>
+      <geometry><cylinder radius="0.02" length="0.26"/></geometry>
+      <material name="mast"/>
+    </visual>
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0011" ixy="0" ixz="0" iyy="0.0011" iyz="0" izz="2e-5"/>
+    </inertial>
+  </link>
+  <joint name="mast_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="mast_link"/>
+    <origin xyz="0.15 0 0.22" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Sensor frames. Positions match model.sdf. -->
+  <link name="lidar_link">
+    <visual>
+      <geometry><cylinder radius="0.035" length="0.04"/></geometry>
+      <material name="red"/>
+    </visual>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="4e-5" ixy="0" ixz="0" iyy="4e-5" iyz="0" izz="4e-5"/>
+    </inertial>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="lidar_link"/>
+    <origin xyz="0.15 0 0.11" rpy="0 0 0"/>
+  </joint>
+
+  <link name="camera_link">
+    <visual>
+      <geometry><box size="0.04 0.10 0.04"/></geometry>
+      <material name="green"/>
+    </visual>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="camera_link"/>
+    <origin xyz="0.17 0 0.37" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="imu_link"/>
+    <origin xyz="0 0 0.06" rpy="0 0 0"/>
+  </joint>
+</robot>
