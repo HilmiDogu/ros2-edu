@@ -39,7 +39,7 @@
     <!-- ===================== Wheels ====================== -->
     <!-- Rotated -pi/2 about X so the cylinder axis lies along Y. -->
     <link name="left_wheel">
-      <pose>0 0.16 -0.03 -1.5707 0 0</pose>
+      <pose>0 0.16 -0.03 0 0 0</pose>
       <inertial>
         <mass>0.5</mass>
         <inertia>
@@ -49,12 +49,14 @@
         </inertia>
       </inertial>
       <collision name="left_wheel_collision">
+        <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
         <surface>
           <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
         </surface>
       </collision>
       <visual name="left_wheel_visual">
+        <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
         <material>
           <ambient>0.15 0.15 0.15 1</ambient>
@@ -64,7 +66,7 @@
     </link>
 
     <link name="right_wheel">
-      <pose>0 -0.16 -0.03 -1.5707 0 0</pose>
+      <pose>0 -0.16 -0.03 0 0 0</pose>
       <inertial>
         <mass>0.5</mass>
         <inertia>
@@ -74,12 +76,14 @@
         </inertia>
       </inertial>
       <collision name="right_wheel_collision">
+        <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
         <surface>
           <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
         </surface>
       </collision>
       <visual name="right_wheel_visual">
+        <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.04</length></cylinder></geometry>
         <material>
           <ambient>0.15 0.15 0.15 1</ambient>
