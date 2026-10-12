@@ -130,6 +130,11 @@ def generate_launch_description():
             # Sensor and state data out: Gazebo -> ROS.
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
             '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+            # Ground truth: what Gazebo actually simulated, as opposed
+            # to what the wheels believe. Published by a second
+            # OdometryPublisher in the robot SDF so students can see
+            # odometry drift away from reality in RViz.
+            '/odom_truth@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
             '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',

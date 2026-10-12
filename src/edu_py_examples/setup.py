@@ -38,6 +38,7 @@ setup(
             # Module 03 - TF2 and odometry
             'tf_listener = edu_py_examples.tf_listener:main',
             'square_driver = edu_py_examples.square_driver:main',
+            'collision_monitor = edu_py_examples.collision_monitor:main',
             # Module 04 - control
             'obstacle_avoider = edu_py_examples.obstacle_avoider:main',
         ],

@@ -294,6 +294,23 @@
 
     <!-- Reports wheel joint angles so robot_state_publisher and RViz can
          animate the wheels rather than showing them frozen. -->
+
+    <!-- GROUND TRUTH. DiffDrive's odometry above is computed from wheel
+         rotation, so it drifts: spin the wheels against a wall and it
+         happily reports metres of travel the robot never made. This
+         plugin instead reports the pose Gazebo actually simulates.
+         Publishing both is the point -- RViz can draw the robot's belief
+         and its true position side by side, and the gap between them IS
+         the lesson of module 03. Topic and frames are kept distinct so
+         nothing downstream confuses the two. -->
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>world</odom_frame>
+      <robot_base_frame>base_footprint_truth</robot_base_frame>
+      <odom_topic>odom_truth</odom_topic>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <dimensions>3</dimensions>
+    </plugin>
     <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
       <topic>joint_states</topic>
