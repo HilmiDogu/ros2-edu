@@ -457,7 +457,18 @@
       <right_joint>rear_right_wheel_joint</right_joint>
       <wheel_separation>0.48</wheel_separation>
       <wheel_radius>0.07</wheel_radius>
-      <odom_publish_frequency>30</odom_publish_frequency>
+      <!-- 100 Hz, not 30. This sets the rate of BOTH /odom and the
+           odom -> base_footprint transform on /tf. The lidar stamps
+           each scan with the simulation time it was taken, and RViz
+           (and SLAM) must look up that exact stamp. At 30 Hz the
+           measured transform stream actually arrived near 21 Hz,
+           leaving gaps of up to 130 ms -- longer than the 100 ms
+           between scans. Over half of all scans then failed their
+           lookup with "extrapolation into the future" and RViz drew
+           them collapsed at the origin. Publishing faster than the
+           sensor keeps a transform always available just ahead of
+           every scan stamp. -->
+      <odom_publish_frequency>100</odom_publish_frequency>
       <topic>cmd_vel</topic>
       <odom_topic>odom</odom_topic>
       <tf_topic>tf</tf_topic>
@@ -478,6 +489,17 @@
     <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
       <topic>joint_states</topic>
+      <!-- Without an explicit rate this plugin publishes once per physics
+           step -- 1000 Hz at a 1 ms step, measured at 919 Hz. Every one of
+           those messages makes robot_state_publisher republish the whole
+           TF tree, so /tf is flooded with wheel transforms stamped far
+           ahead of the 30 Hz odom -> base_footprint the bridge delivers.
+           TF2 then interpolates the robot's pose against timestamps it has
+           no odometry for, and the pose jumps metres between consecutive
+           lookups: the laser scan is drawn at those bogus poses and
+           visibly collapses toward the robot. 50 Hz is plenty for
+           animating six wheels and keeps TF consistent. -->
+      <update_rate>50</update_rate>
     </plugin>
   </model>
 </sdf>
