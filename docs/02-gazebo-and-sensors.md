@@ -202,6 +202,16 @@ Run the worked example and watch the numbers change as you drive:
 ros2 run edu_py_examples lidar_monitor
 ```
 
+**It only sees one horizontal slice.** The lidar scans a single plane at a
+fixed height, so anything that does not rise into that plane is invisible
+to it. The Moon and Mars worlds make this concrete: they contain two
+craters, and only the taller one (crater1) appears in the SLAM map. The
+shorter crater2's rim sits just below the rover's scan plane, so the beam
+passes straight over it and SLAM never learns it is there. Drive up to
+each and compare. This is why a planar lidar alone is not enough for a
+real robot — low kerbs, steps and pits are exactly what it misses, and
+why depth cameras or tilted/3-D lidars exist.
+
 ### Camera and IMU
 
 ```bash
