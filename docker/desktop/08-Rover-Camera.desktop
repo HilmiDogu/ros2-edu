@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=08 Rover Camera
+Comment=See what the rover's forward camera sees (/camera), in its own window
+Exec=/workspace/docker/desktop/launch_camera.sh
+Icon=camera-photo
+Terminal=true
+Categories=Education;Robotics;

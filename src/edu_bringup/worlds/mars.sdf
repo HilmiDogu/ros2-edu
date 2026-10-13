@@ -87,29 +87,29 @@
 
     <!-- ========================= Rocks ========================= -->
     <include><name>rock_a</name><uri>model://rock1</uri>
-      <pose>-3.0 2.0 1.0 0.2 0.1 0.5</pose><scale>0.006 0.006 0.006</scale></include>
+      <pose>-3.0 2.0 -0.67 0.2 0.1 0.5</pose><scale>0.006 0.006 0.006</scale></include>
     <include><name>rock_b</name><uri>model://rock6</uri>
-      <pose>3.5 -2.5 1.0 0 0.15 0.9</pose><scale>0.0055 0.0055 0.0055</scale></include>
+      <pose>3.5 -2.5 -1.31 0 0.15 0.9</pose><scale>0.0055 0.0055 0.0055</scale></include>
     <include><name>rock_c</name><uri>model://rock1</uri>
-      <pose>1.5 3.5 1.0 0.15 0 0.7</pose><scale>0.005 0.005 0.005</scale></include>
+      <pose>1.5 3.5 -1.16 0.15 0 0.7</pose><scale>0.005 0.005 0.005</scale></include>
     <include><name>rock_d</name><uri>model://rock6</uri>
-      <pose>-2.5 -3.5 1.0 0.1 0.2 0.3</pose><scale>0.0045 0.0045 0.0045</scale></include>
+      <pose>-2.5 -3.5 -0.45 0.1 0.2 0.3</pose><scale>0.0045 0.0045 0.0045</scale></include>
     <include><name>rock_e</name><uri>model://rock1</uri>
-      <pose>5.0 1.0 1.0 0 0.1 1.2</pose><scale>0.004 0.004 0.004</scale></include>
+      <pose>5.0 1.0 -1.05 0 0.1 1.2</pose><scale>0.004 0.004 0.004</scale></include>
     <include><name>rock_f</name><uri>model://rock6</uri>
-      <pose>-5.0 4.0 1.0 0.2 0 2.1</pose><scale>0.0038 0.0038 0.0038</scale></include>
+      <pose>-5.0 4.0 -0.58 0.2 0 2.1</pose><scale>0.0038 0.0038 0.0038</scale></include>
     <include><name>rock_g</name><uri>model://rock1</uri>
-      <pose>0.5 -5.0 1.0 0 0.15 0.4</pose><scale>0.0035 0.0035 0.0035</scale></include>
+      <pose>0.5 -5.0 -0.28 0 0.15 0.4</pose><scale>0.0035 0.0035 0.0035</scale></include>
     <include><name>rock_h</name><uri>model://rock6</uri>
-      <pose>-6.5 -1.0 1.0 0.1 0.1 1.7</pose><scale>0.0042 0.0042 0.0042</scale></include>
+      <pose>-6.5 -1.0 -0.37 0.1 0.1 1.7</pose><scale>0.0042 0.0042 0.0042</scale></include>
     <include><name>rock_i</name><uri>model://rock1</uri>
-      <pose>6.5 -4.0 1.0 0 0 0.9</pose><scale>0.003 0.003 0.003</scale></include>
+      <pose>6.5 -4.0 -1.08 0 0 0.9</pose><scale>0.003 0.003 0.003</scale></include>
     <include><name>rock_j</name><uri>model://rock6</uri>
-      <pose>2.5 5.5 1.0 0.15 0.1 2.6</pose><scale>0.0032 0.0032 0.0032</scale></include>
+      <pose>2.5 5.5 -1.02 0.15 0.1 2.6</pose><scale>0.0032 0.0032 0.0032</scale></include>
     <include><name>rock_k</name><uri>model://rock1</uri>
-      <pose>-4.0 -6.0 1.0 0 0.2 0.2</pose><scale>0.0028 0.0028 0.0028</scale></include>
+      <pose>-4.0 -6.0 -0.86 0 0.2 0.2</pose><scale>0.0028 0.0028 0.0028</scale></include>
     <include><name>rock_l</name><uri>model://rock6</uri>
-      <pose>4.5 4.5 1.0 0.1 0 1.1</pose><scale>0.0026 0.0026 0.0026</scale></include>
+      <pose>4.5 4.5 -0.91 0.1 0 1.1</pose><scale>0.0026 0.0026 0.0026</scale></include>
 
   </world>
 </sdf>
