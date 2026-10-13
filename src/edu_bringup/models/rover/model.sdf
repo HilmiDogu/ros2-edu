@@ -47,12 +47,15 @@
          and it looks like a rover deck. -->
     <link name="base_link">
       <inertial>
-        <mass>8.0</mass>
-        <!-- Box inertia for 0.6 x 0.4 x 0.12 m at m = 8 kg. -->
+        <!-- 85 kg chassis: a rover carries most of its ~100 kg mass here
+             (battery, electronics). A heavier rover plants on the terrain
+             and resists the low-gravity skittishness instead of being
+             flicked around. Box inertia for 0.6 x 0.4 x 0.12 m at 85 kg. -->
+        <mass>85.0</mass>
         <inertia>
-          <ixx>0.1163</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.2496</iyy><iyz>0</iyz>
-          <izz>0.3067</izz>
+          <ixx>1.235</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>2.652</iyy><iyz>0</iyz>
+          <izz>3.683</izz>
         </inertia>
       </inertial>
       <collision name="base_collision">
@@ -86,11 +89,12 @@
     <link name="left_wheel">
       <pose>0 0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="left_wheel_collision">
@@ -123,11 +127,12 @@
     <link name="right_wheel">
       <pose>0 -0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="right_wheel_collision">
@@ -161,11 +166,12 @@
     <link name="front_left_wheel">
       <pose>0.22 0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="collision">
@@ -198,11 +204,12 @@
     <link name="front_right_wheel">
       <pose>0.22 -0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="collision">
@@ -235,11 +242,12 @@
     <link name="rear_left_wheel">
       <pose>-0.22 0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="collision">
@@ -272,11 +280,12 @@
     <link name="rear_right_wheel">
       <pose>-0.22 -0.24 -0.05 0 0 0</pose>
       <inertial>
-        <mass>0.6</mass>
+        <!-- 2.3 kg wheel (6 wheels = 13.8 kg). Cylinder r=0.07, L=0.05. -->
+        <mass>2.3</mass>
         <inertia>
-          <ixx>0.00098</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.00098</iyy><iyz>0</iyz>
-          <izz>0.00147</izz>
+          <ixx>0.003297</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.003297</iyy><iyz>0</iyz>
+          <izz>0.005635</izz>
         </inertia>
       </inertial>
       <collision name="collision">
@@ -341,11 +350,11 @@
     <link name="mast_link">
       <pose>-0.12 0 0.18 0 0 0</pose>
       <inertial>
-        <mass>0.2</mass>
+        <mass>1.0</mass>
         <inertia>
-          <ixx>0.0011</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>0.0011</iyy><iyz>0</iyz>
-          <izz>2e-5</izz>
+          <ixx>0.0055</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.0055</iyy><iyz>0</iyz>
+          <izz>1e-4</izz>
         </inertia>
       </inertial>
       <collision name="collision">
@@ -373,11 +382,11 @@
            may intrude on a 360-degree scan plane. -->
       <pose>0.15 0 0.42 0 0 0</pose>
       <inertial>
-        <mass>0.1</mass>
+        <mass>0.3</mass>
         <inertia>
-          <ixx>4e-5</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>4e-5</iyy><iyz>0</iyz>
-          <izz>4e-5</izz>
+          <ixx>1.2e-4</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>1.2e-4</iyy><iyz>0</iyz>
+          <izz>1.2e-4</izz>
         </inertia>
       </inertial>
       <visual name="lidar_visual">
@@ -422,11 +431,11 @@
     <link name="camera_link">
       <pose>-0.10 0 0.33 0 0 0</pose>
       <inertial>
-        <mass>0.1</mass>
+        <mass>0.2</mass>
         <inertia>
-          <ixx>1e-5</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>1e-5</iyy><iyz>0</iyz>
-          <izz>1e-5</izz>
+          <ixx>2e-5</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>2e-5</iyy><iyz>0</iyz>
+          <izz>2e-5</izz>
         </inertia>
       </inertial>
       <visual name="camera_visual">
@@ -456,11 +465,11 @@
     <link name="imu_link">
       <pose>0 0 0.06 0 0 0</pose>
       <inertial>
-        <mass>0.05</mass>
+        <mass>0.1</mass>
         <inertia>
-          <ixx>1e-6</ixx><ixy>0</ixy><ixz>0</ixz>
-          <iyy>1e-6</iyy><iyz>0</iyz>
-          <izz>1e-6</izz>
+          <ixx>2e-6</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>2e-6</iyy><iyz>0</iyz>
+          <izz>2e-6</izz>
         </inertia>
       </inertial>
       <sensor name="imu" type="imu">
