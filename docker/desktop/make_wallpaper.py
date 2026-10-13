@@ -71,9 +71,22 @@ def make(path):
     # lit rim
     draw.arc([hx - horizon_r, hy - horizon_r, hx + horizon_r, hy + horizon_r],
              start=200, end=340, fill=(120, 118, 125), width=6)
-    # a couple of craters on the surface
-    for (fx, fy, fr) in [(0.30, 0.90, 70), (0.62, 0.95, 50), (0.80, 0.88, 40)]:
-        ex, ey = int(W * fx), int(H * fy)
+
+    # surface_y(x): the y of the lunar surface directly below screen x, from
+    # the same circle as the horizon. Craters are placed relative to THIS so
+    # they always sit ON the curved surface instead of floating above it
+    # where the horizon dips near the edges.
+    def surface_y(x):
+        dx = x - hx
+        inside = horizon_r * horizon_r - dx * dx
+        return hy - math.sqrt(inside) if inside > 0 else H + 1
+
+    # craters, each a depth below the surface at its x (fdepth) so it hugs
+    # the curve. fr is the horizontal radius.
+    for (fx, fdepth, fr) in [(0.28, 24, 70), (0.55, 70, 55),
+                             (0.78, 150, 46), (0.92, 70, 36)]:
+        ex = int(W * fx)
+        ey = int(surface_y(ex) + fdepth)
         draw.ellipse([ex - fr, ey - fr // 3, ex + fr, ey + fr // 3], fill=(24, 23, 26))
         draw.arc([ex - fr, ey - fr // 3, ex + fr, ey + fr // 3],
                  start=200, end=340, fill=(80, 78, 84), width=3)

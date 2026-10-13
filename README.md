@@ -65,8 +65,8 @@ You will land on a Linux desktop with numbered icons.
 | **03 Teleop** | Keyboard driving | **Yes** — 02, 06 or 07 |
 | **04 Navigation** | SLAM mapping with slam_toolbox | **Yes** — 02, 06 or 07 |
 | **05 Obstacle Avoider** | The robot drives itself, avoiding obstacles | **Yes** — 02, 06 or 07 |
-| **06 Moon Rover** | Six-wheel rover on the Moon (gravity 1.62 m/s²) | No — this *is* the simulation |
-| **07 Mars Rover** | Six-wheel rover on Mars (gravity 3.72 m/s²) | No — this *is* the simulation |
+| **06 Moon Rover** | Six-wheel rover on open Moon terrain — hills, drivable craters, scattered boulders, gravity 1.62 m/s² | No — this *is* the simulation |
+| **07 Mars Rover** | Six-wheel rover on open Mars terrain — same, gravity 3.72 m/s² | No — this *is* the simulation |
 | **ROS 2 Terminal** | A shell with ROS 2 and the workspace already sourced | No |
 
 **Start with 01, then 02.** Icons 03–05 attach to a simulation that is
@@ -140,6 +140,11 @@ ros2 topic echo /map --once --field info   # the SLAM map's size/resolution
 lidar instead of the raw message. For a live visual, the Gazebo and RViz
 windows in the desktop show the scan, camera, TF tree and the SLAM map as
 it builds (set RViz's *Fixed Frame* to `map` once mapping starts).
+
+**The rover's eye view** is already in RViz: the *Image* display (bottom
+left) shows the `/camera` feed — what the rover sees looking forward from
+its mast. It is live as you drive. To see only that, run
+`ros2 run rqt_image_view rqt_image_view /camera` in a ROS 2 Terminal.
 
 The [usage guide](docs/usage.md) covers every module, the exercises, and
 how to re-run your own code after editing.
