@@ -96,16 +96,22 @@
       <collision name="left_wheel_collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="left_wheel_visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -127,16 +133,22 @@
       <collision name="right_wheel_collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="right_wheel_visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -159,16 +171,22 @@
       <collision name="collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -190,16 +208,22 @@
       <collision name="collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -221,16 +245,22 @@
       <collision name="collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -252,16 +282,22 @@
       <collision name="collision">
         <pose>0 0 0 -1.5707 0 0</pose>
         <geometry><cylinder><radius>0.07</radius><length>0.05</length></cylinder></geometry>
-        <!-- mu is rolling (longitudinal) friction, mu2 is LATERAL.
-             A six-wheel skid steer turns by scrubbing its wheels
-             sideways, so mu2 must be low or the wheels grip too hard to
-             slide: the plugin counter-rotates the sides correctly, the
-             wheels spin at the commanded rate, and the rover does not
-             turn at all. Odometry then reports a rotation that never
-             happened, and SLAM violently re-orients the map to match --
-             which is what makes the map appear to spin around the
-             robot. Keep mu high for traction, drop mu2 to let it turn. -->
-        <surface><friction><ode><mu>1.5</mu><mu2>0.1</mu2></ode></friction></surface>
+        <!-- A six-wheel skid steer turns by scrubbing its wheels
+             sideways. If that scrub grips, the wheels spin at the
+             commanded rate but the rover does not turn; odometry then
+             reports a rotation that never happened, SLAM violently
+             re-orients the map to match, and the map appears to shear and
+             spin around the robot (the exact symptom seen in RViz).
+
+             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             arbitrary friction axis, so "mu2" is not actually the sideways
+             direction and the scrub still grips. fdir1 = 1 0 0 pins the
+             first friction direction to the wheel's ROLLING axis, so mu
+             (rolling) gives forward traction and mu2 + slip2 (lateral)
+             let the wheel slide sideways during a turn. Measured: with
+             this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
+             turn (truth == odom); without fdir1 the real turn was ~0.05. -->
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
