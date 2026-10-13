@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=09 Nav2 Waypoints
+Comment=Click waypoints in RViz; the rover drives to them with Nav2
+Exec=/workspace/docker/desktop/launch_nav.sh
+Icon=applications-internet
+Terminal=true
+Categories=Education;Robotics;
