@@ -49,13 +49,20 @@ def crater(nx, ny, cx, cy, radius, depth, rim):
     return bowl + ring
 
 
-# Craters placed away from the spawn point (spawn is near -4,-4 in metres;
-# in 0..1 terrain coords with a 40 m span centred at 0, that is ~0.4,0.4).
+# Craters in 0..1 terrain coords (40 m span centred at 0; 0.5,0.5 = origin).
+# A good spread of sizes and depths across the whole arena. The spawn point
+# (~0.4,0.4) is deliberately left clear.
 CRATERS = [
     # (cx, cy, radius, depth, rim)
     (0.62, 0.58, 0.14, 0.22, 0.04),   # big, deep
-    (0.38, 0.66, 0.09, 0.12, 0.03),   # smaller, shallower
-    (0.70, 0.30, 0.07, 0.10, 0.02),
+    (0.38, 0.66, 0.09, 0.12, 0.03),   # medium
+    (0.70, 0.30, 0.07, 0.10, 0.02),   # small
+    (0.22, 0.28, 0.11, 0.16, 0.03),   # medium, SW
+    (0.80, 0.72, 0.08, 0.13, 0.03),   # NE
+    (0.50, 0.85, 0.10, 0.14, 0.03),   # N
+    (0.15, 0.80, 0.06, 0.09, 0.02),   # small, NW
+    (0.85, 0.15, 0.09, 0.15, 0.03),   # SE
+    (0.30, 0.50, 0.05, 0.08, 0.02),   # small, central-W
 ]
 
 

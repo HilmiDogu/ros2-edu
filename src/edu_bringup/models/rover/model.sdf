@@ -15,7 +15,7 @@
 
     * six wheels instead of two + a caster. The two MIDDLE wheels
       (left_wheel / right_wheel) are the driven pair the DiffDrive plugin
-      commands and derives odometry from -- exactly the edubot interface.
+      commands and derives odometry from - exactly the edubot interface.
       The four corner wheels are free-spinning "continuous" joints: they
       carry the rover's weight and give the authentic six-wheel look, but
       they are deliberately NOT driven, so odometry stays as simple and
@@ -31,7 +31,7 @@
       the mast (like Perseverance's Mastcam), and lidar_link stays where
       the modules expect a 2-D scan.
 
-  Everything is still primitive shapes -- no meshes -- so the world loads
+  Everything is still primitive shapes - no meshes - so the world loads
   instantly and works with no network, like the rest of this workspace.
 
   Numbers here MUST match rover.urdf.xacro. Change a wheel radius in one,
@@ -82,7 +82,7 @@
          wheels are the driven pair; the four corners spin freely.
          Rotated -pi/2 about X so the cylinder axis lies along Y. -->
 
-    <!-- ---- Driven middle pair: left_wheel / right_wheel ---- -->
+    <!-- == Driven middle pair: left_wheel / right_wheel == -->
     <link name="left_wheel">
       <pose>0 0.24 -0.05 0 0 0</pose>
       <inertial>
@@ -103,7 +103,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -111,7 +111,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="left_wheel_visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -140,7 +140,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -148,7 +148,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="right_wheel_visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -157,7 +157,7 @@
       </visual>
     </link>
 
-    <!-- ---- Free-spinning corner wheels (the six-wheel look) ---- -->
+    <!-- == Free-spinning corner wheels (the six-wheel look) == -->
     <link name="front_left_wheel">
       <pose>0.22 0.24 -0.05 0 0 0</pose>
       <inertial>
@@ -178,7 +178,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -186,7 +186,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -215,7 +215,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -223,7 +223,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -252,7 +252,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -260,7 +260,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -289,7 +289,7 @@
              re-orients the map to match, and the map appears to shear and
              spin around the robot (the exact symptom seen in RViz).
 
-             The fix is NOT just a low mu2 -- without fdir1, ODE picks an
+             The fix is NOT just a low mu2 - without fdir1, ODE picks an
              arbitrary friction axis, so "mu2" is not actually the sideways
              direction and the scrub still grips. fdir1 = 1 0 0 pins the
              first friction direction to the wheel's ROLLING axis, so mu
@@ -297,7 +297,7 @@
              let the wheel slide sideways during a turn. Measured: with
              this, a commanded 0.5 rad/s turn produces a real 0.5 rad/s
              turn (truth == odom); without fdir1 the real turn was ~0.05. -->
-        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction></surface>
+        <surface><friction><ode><mu>1.0</mu><mu2>0.0</mu2><fdir1>1 0 0</fdir1><slip1>0.0</slip1><slip2>0.1</slip2></ode></friction><bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100.0</threshold></bounce><contact><ode><kp>80000</kp><kd>30</kd><max_vel>0.1</max_vel><min_depth>0.002</min_depth></ode></contact></surface>
       </collision>
       <visual name="visual">
         <pose>0 0 0 -1.5707 0 0</pose>
@@ -306,7 +306,7 @@
       </visual>
     </link>
 
-    <!-- ---- Wheel joints ---- -->
+    <!-- == Wheel joints == -->
     <!-- The driven pair. -->
     <joint name="left_wheel_joint" type="revolute">
       <parent>base_link</parent><child>left_wheel</child>
@@ -498,7 +498,7 @@
            each scan with the simulation time it was taken, and RViz
            (and SLAM) must look up that exact stamp. At 30 Hz the
            measured transform stream actually arrived near 21 Hz,
-           leaving gaps of up to 130 ms -- longer than the 100 ms
+           leaving gaps of up to 130 ms - longer than the 100 ms
            between scans. Over half of all scans then failed their
            lookup with "extrapolation into the future" and RViz drew
            them collapsed at the origin. Publishing faster than the
@@ -514,11 +514,19 @@
            have only one parent. If DiffDrive also parents base_link to
            odom, base_link has two parents, the tree splits, and the SLAM
            map (map -> odom -> base_footprint) cannot be tied to the
-           robot -- the symptom is a map that slides with the robot as it
+           robot - the symptom is a map that slides with the robot as it
            drives. Parenting base_footprint here keeps a single chain:
            map -> odom -> base_footprint -> base_link -> sensors. -->
       <child_frame_id>base_footprint</child_frame_id>
-      <max_linear_acceleration>2.0</max_linear_acceleration>
+      <!-- Cap speed and acceleration. On low-gravity rough terrain, high
+           speed into a crater rim or rock is what launches the rover: less
+           kinetic energy and gentler acceleration keep the wheels on the
+           ground. 0.6 m/s is still a usable driving pace for the course. -->
+      <max_linear_velocity>0.6</max_linear_velocity>
+      <min_linear_velocity>-0.6</min_linear_velocity>
+      <max_angular_velocity>1.0</max_angular_velocity>
+      <min_angular_velocity>-1.0</min_angular_velocity>
+      <max_linear_acceleration>1.0</max_linear_acceleration>
     </plugin>
 
     <!-- Reports every wheel joint angle so RViz animates all six wheels. -->
@@ -527,7 +535,7 @@
          rotation, so it drifts: spin the wheels against a wall and it
          happily reports metres of travel the robot never made. This
          plugin instead reports the pose Gazebo actually simulates.
-         Publishing both is the point -- RViz can draw the robot's belief
+         Publishing both is the point - RViz can draw the robot's belief
          and its true position side by side, and the gap between them IS
          the lesson of module 03. Topic and frames are kept distinct so
          nothing downstream confuses the two. -->
@@ -543,7 +551,7 @@
             name="gz::sim::systems::JointStatePublisher">
       <topic>joint_states</topic>
       <!-- Without an explicit rate this plugin publishes once per physics
-           step -- 1000 Hz at a 1 ms step, measured at 919 Hz. Every one of
+           step - 1000 Hz at a 1 ms step, measured at 919 Hz. Every one of
            those messages makes robot_state_publisher republish the whole
            TF tree, so /tf is flooded with wheel transforms stamped far
            ahead of the 30 Hz odom -> base_footprint the bridge delivers.
