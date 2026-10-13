@@ -1,8 +1,8 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=04 Navigation
-Comment=SLAM mapping with slam_toolbox
+Name=04 SLAM Mapping
+Comment=Build a map with slam_toolbox, shown in its own map-frame RViz
 Exec=/workspace/docker/desktop/launch_slam.sh
 Icon=applications-internet
 Terminal=true

@@ -52,6 +52,31 @@ if [ -d /workspace/docker/desktop ]; then
             -n -t bool -s false 2>/dev/null || true
     done
 
+    # Space-themed desktop wallpaper. The backdrop is configured per
+    # monitor AND per workspace, and the property names differ between
+    # xfce versions, so set it on every backdrop property that ends in
+    # last-image and fix the matching image-style to 'zoomed' (fill the
+    # screen). Falls back silently if the image is missing.
+    WALL=/workspace/docker/desktop/wallpaper.png
+    if [ -f "$WALL" ]; then
+        for p in $(xfconf-query -c xfce4-desktop -l 2>/dev/null \
+                   | grep 'last-image$'); do
+            xfconf-query -c xfce4-desktop -p "$p" -s "$WALL" 2>/dev/null || true
+            style="${p%last-image}image-style"
+            xfconf-query -c xfce4-desktop -p "$style" -n -t int -s 5 2>/dev/null || true
+        done
+        # If no backdrop property existed yet (very fresh profile), create
+        # one for the current monitor/workspace so there is something to set.
+        if ! xfconf-query -c xfce4-desktop -l 2>/dev/null | grep -q 'last-image$'; then
+            base=/backdrop/screen0/monitorVNC-0/workspace0
+            xfconf-query -c xfce4-desktop -p "$base/last-image" \
+                -n -t string -s "$WALL" 2>/dev/null || true
+            xfconf-query -c xfce4-desktop -p "$base/image-style" \
+                -n -t int -s 5 2>/dev/null || true
+        fi
+        echo "[autostart] wallpaper set"
+    fi
+
     # Redraw, in case the desktop was already running when this ran.
     xfdesktop --reload 2>/dev/null || true
 else

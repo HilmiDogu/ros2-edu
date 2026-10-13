@@ -36,6 +36,22 @@ for prop in show-home show-filesystem show-trash show-removable; do
     xfconf-query -c xfce4-desktop -p "/desktop-icons/file-icons/${prop}" \
         -n -t bool -s false 2>/dev/null || true
 done
+
+# Space-themed wallpaper, on every per-monitor/per-workspace backdrop.
+WALL=/workspace/docker/desktop/wallpaper.png
+if [ -f "$WALL" ]; then
+    for p in $(xfconf-query -c xfce4-desktop -l 2>/dev/null | grep 'last-image$'); do
+        xfconf-query -c xfce4-desktop -p "$p" -s "$WALL" 2>/dev/null || true
+        xfconf-query -c xfce4-desktop -p "${p%last-image}image-style" \
+            -n -t int -s 5 2>/dev/null || true
+    done
+    if ! xfconf-query -c xfce4-desktop -l 2>/dev/null | grep -q 'last-image$'; then
+        base=/backdrop/screen0/monitorVNC-0/workspace0
+        xfconf-query -c xfce4-desktop -p "$base/last-image" -n -t string -s "$WALL" 2>/dev/null || true
+        xfconf-query -c xfce4-desktop -p "$base/image-style" -n -t int -s 5 2>/dev/null || true
+    fi
+    echo "[setup] wallpaper set"
+fi
 xfdesktop --reload 2>/dev/null || true
 
 echo "[setup] icons installed:"
