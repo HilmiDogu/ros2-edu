@@ -8,6 +8,13 @@ Everything runs in a container and is visible in a **web browser**. There
 is no ROS installation, no Linux virtual machine, no X server to
 configure, and no difference between Windows, macOS and Linux.
 
+| Gazebo — the rover on the Moon | RViz — the SLAM map and laser scan |
+|---|---|
+| ![The six-wheel rover on the cratered Moon terrain in Gazebo, with scattered boulders](docs/images/gazebo-moon.png) | ![RViz showing the SLAM occupancy map building, the rover and its laser scan in the map frame](docs/images/rviz-slam.png) |
+
+*Both windows run side by side on the in-browser desktop. Gazebo is the
+simulated world; RViz shows what the robot senses and the map it builds.*
+
 ---
 
 ## Getting started
