@@ -37,6 +37,50 @@ hold_open() {
     read -rp "Press Enter to close this window..."
 }
 
+# --- One simulation at a time -------------------------------------------
+# Clicking a simulation icon while another is running starts a SECOND of
+# everything: two gz servers, two bridges, two RViz. They publish to the
+# same topics and the GUI may attach to either, so the symptom is not an
+# obvious crash -- it is edits that appear not to take effect, because
+# you are looking at the older world. That has cost several debugging
+# rounds, so the launchers now clear the field before starting.
+#
+# Ordered deliberately: the ros2 launch supervisor first, or it restarts
+# the children we are about to kill.
+stop_running_simulation() {
+    if ! pgrep -f "gz sim|parameter_bridge|rviz2" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    echo "Stopping a simulation that is already running..."
+    pkill -f "ros2 launch edu_bringup" 2>/dev/null || true
+    sleep 2
+    pkill -f "gz sim"          2>/dev/null || true
+    pkill -f parameter_bridge  2>/dev/null || true
+    pkill -f image_bridge      2>/dev/null || true
+    pkill -f robot_state_pub   2>/dev/null || true
+    pkill -f rviz2             2>/dev/null || true
+    pkill -f slam_toolbox      2>/dev/null || true
+    sleep 2
+
+    # SIGKILL whatever ignored the polite request.
+    pkill -9 -f "gz sim"         2>/dev/null || true
+    pkill -9 -f parameter_bridge 2>/dev/null || true
+    pkill -9 -f rviz2            2>/dev/null || true
+    sleep 2
+
+    local left
+    left=$(pgrep -cf "gz sim" 2>/dev/null || echo 0)
+    if [ "${left}" -gt 0 ]; then
+        echo "  warning: ${left} Gazebo process(es) would not die."
+        echo "  If the simulation looks wrong, restart the container:"
+        echo "    docker compose -f docker/docker-compose.yml restart"
+    else
+        echo "  done."
+    fi
+    echo
+}
+
 # --- Multi-screen placement ---------------------------------------------
 # Gazebo and RViz together do not fit comfortably on one screen, so the
 # simulation launchers put them on their own displays: RViz on :2

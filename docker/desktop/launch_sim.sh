@@ -13,6 +13,8 @@ echo
 # simulation itself runs headless; the two GUIs are started separately
 # and placed on :3 and :2. If a screen cannot be started the window
 # falls back to this one, so a student is never left with nothing.
+stop_running_simulation
+
 ensure_screen 3 || true
 ensure_screen 2 || true
 
