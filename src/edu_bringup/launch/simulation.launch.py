@@ -129,6 +129,18 @@ def generate_launch_description():
             '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
             # Sensor and state data out: Gazebo -> ROS.
             '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            # 3-D lidar for terrain. A PointCloud2 rather than a
+            # LaserScan: it carries the vertical rays that make the
+            # craters and ridge visible as shape. SLAM still uses
+            # /scan above; this one is purely for seeing.
+            # NOTE the topic name. A gpu_lidar publishes TWO topics:
+            # <topic> as a LaserScan, and <topic>/points as the point
+            # cloud. The sensor's <topic> is 'points', so the cloud is
+            # on /points/points. Bridging /points as PointCloudPacked
+            # instead is a type mismatch against the LaserScan that
+            # actually lives there, and fails silently -- the ROS topic
+            # appears in `ros2 topic list` and never carries a message.
+            '/points/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
             '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
             # Ground truth: what Gazebo actually simulated, as opposed
             # to what the wheels believe. Published by a second

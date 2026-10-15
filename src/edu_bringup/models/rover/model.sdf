@@ -422,6 +422,76 @@
         </lidar>
       </sensor>
     </link>
+    <!-- ============ 3-D lidar (terrain sensing) ============ -->
+    <!-- A SECOND lidar, separate from the 2-D one above, with vertical
+         samples as well as horizontal. It publishes a PointCloud2 on
+         /points that RViz can draw coloured by height, so the craters,
+         ridge and rocks are visible as terrain rather than as a flat
+         occupancy grid.
+
+         Why a second sensor rather than changing the first: slam_toolbox
+         wants a single-plane LaserScan, and giving it vertical rays
+         would break the map. The 2-D scan stays exactly as it was; this
+         one is purely for visualisation.
+
+         16 vertical rays over +/- 15 degrees, tilted down so they sweep
+         the ground ahead instead of the sky. 16 x 180 = 2880 points per
+         sweep at 5 Hz, which software rendering can carry; raising
+         either number is the first thing to cost you frame rate. -->
+    <link name="lidar3d_link">
+      <pose>0.15 0 0.38 0 0.15 0</pose>
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>4e-5</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>4e-5</iyy><iyz>0</iyz>
+          <izz>4e-5</izz>
+        </inertia>
+      </inertial>
+      <visual name="lidar3d_visual">
+        <geometry><cylinder><radius>0.03</radius><length>0.03</length></cylinder></geometry>
+        <material><diffuse>0.2 0.4 0.9 1</diffuse></material>
+      </visual>
+      <sensor name="lidar3d" type="gpu_lidar">
+        <pose>0 0 0 0 0 0</pose>
+        <topic>points</topic>
+        <gz_frame_id>lidar3d_link</gz_frame_id>
+        <update_rate>5</update_rate>
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>180</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>16</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.26</min_angle>
+              <max_angle>0.26</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.2</min>
+            <max>12.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </link>
+
+    <joint name="lidar3d_joint" type="fixed">
+      <parent>base_link</parent><child>lidar3d_link</child>
+    </joint>
+
     <joint name="lidar_joint" type="fixed">
       <parent>base_link</parent><child>lidar_link</child>
     </joint>

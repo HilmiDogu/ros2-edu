@@ -128,6 +128,25 @@
       <inertia ixx="4e-5" ixy="0" ixz="0" iyy="4e-5" iyz="0" izz="4e-5"/>
     </inertial>
   </link>
+  <!-- 3-D lidar used for terrain visualisation (publishes /points).
+       Pose and tilt must match model.sdf. -->
+  <link name="lidar3d_link">
+    <visual>
+      <geometry><cylinder radius="0.03" length="0.03"/></geometry>
+      <material name="blue3d"><color rgba="0.2 0.4 0.9 1"/></material>
+    </visual>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="4e-5" ixy="0" ixz="0" iyy="4e-5" iyz="0" izz="4e-5"/>
+    </inertial>
+  </link>
+
+  <joint name="lidar3d_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="lidar3d_link"/>
+    <origin xyz="0.15 0 0.38" rpy="0 0.15 0"/>
+  </joint>
+
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child  link="lidar_link"/>
