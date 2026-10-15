@@ -259,8 +259,9 @@ The first build pulls roughly 4 GB. On a slow or shared connection this
 can take a long time. Options, in order of preference:
 
 1. Run it at home, or overnight, before the session.
-2. Ask your instructor for a pre-built image file — see the
-   [instructor guide](instructors.md).
+2. Ask whoever is running the course for a pre-built image file: it can
+   be handed out on a USB stick and loaded with `docker load`, which
+   needs no download at all.
 
 ### Disk filling up
 

@@ -101,10 +101,10 @@ Then open **<http://localhost:6902>** in your browser. The password is
 
 The first run takes 10–20 minutes. Later ones take seconds.
 
-If something goes wrong, it is almost certainly covered in
-[troubleshooting.md](troubleshooting.md). Look there before asking — not
-to save the demonstrator's time, but because finding the answer yourself
-is most of what this skill is.
+If something goes wrong, it is almost certainly in
+[troubleshooting.md](troubleshooting.md) already. Look there first —
+working out why something broke is most of what this skill actually is,
+and you will meet the same handful of causes over and over.
 
 ---
 

@@ -2,6 +2,10 @@
 
 Notes for running this workspace as a taught course.
 
+Everything else in `docs/` is addressed to students directly and
+can be handed over as-is; this file is the only one written for
+whoever is running the course.
+
 ---
 
 ## Before the first session

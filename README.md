@@ -252,7 +252,6 @@ Supporting material:
 - [Exercises](docs/exercises.md) — the hands-on tasks, with solutions
 - [Troubleshooting](docs/troubleshooting.md) — when something does not work
 - [Cheat sheet](docs/cheatsheet.md) — the commands worth memorising
-- [Instructor guide](docs/instructors.md) — scheduling, assessment, known friction
 
 ---
 
@@ -360,16 +359,14 @@ need a rebuild when you add a new file or change `setup.py`.
 
 ---
 
-## For instructors
+## How long it takes
 
-- Roughly 8–12 contact hours of material across the four modules.
-- Every module ends with exercises; each exercise has a reference
-  solution under `src/edu_exercises/solutions/`.
-- The whole environment is pinned and reproducible: every student gets
-  byte-identical software, which removes the "works on my machine"
-  problem from grading entirely.
-- To add a module, add a node to `edu_py_examples`, register it in
-  `setup.py`, and add a guide under `docs/`.
+Roughly 8–12 hours across the four modules, plus the exercises. There is
+no rush and no need to do it in one sitting — the container picks up
+where you left off.
+
+<sub>Running this as a taught course? See
+[docs/instructors.md](docs/instructors.md).</sub>
 
 ## Credits
 
