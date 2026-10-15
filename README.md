@@ -238,6 +238,7 @@ Work through these in order. Each builds on the one before.
 
 | # | Module | You will learn |
 |---|--------|----------------|
+| 00 | [**Before you start**](docs/00-first-session.md) | What Linux, Docker, ROS 2 and Gazebo are, a first terminal, and twenty minutes of driving — **start here if any of those words are new** |
 | 01 | [Core ROS 2 concepts](docs/01-ros2-basics.md) | Nodes, topics, publishers and subscribers, services, parameters, the `ros2` CLI |
 | 02 | [Gazebo and sensors](docs/02-gazebo-and-sensors.md) | Robot description (SDF/URDF), worlds, the ROS↔Gazebo bridge, lidar, camera, IMU, RViz |
 | 03 | [TF2 and odometry](docs/03-tf-and-odometry.md) | Coordinate frames, transform trees, odometry, and why it drifts |
@@ -246,6 +247,7 @@ Work through these in order. Each builds on the one before.
 Supporting material:
 
 - [Installing Docker](docs/installing-docker.md) — Windows, Linux and macOS, from scratch
+- [First session](docs/00-first-session.md) — for students new to Linux, Docker or the terminal
 - [Usage guide](docs/usage.md) — how to start it and run every example
 - [Exercises](docs/exercises.md) — the hands-on tasks, with solutions
 - [Troubleshooting](docs/troubleshooting.md) — when something does not work

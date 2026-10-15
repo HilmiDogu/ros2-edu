@@ -26,6 +26,56 @@ to be distracting.
 Have students check Docker Desktop → Settings → Resources and allocate at
 least 4 CPUs.
 
+## Teaching students with no Linux, Docker or CLI background
+
+Most of a bachelor cohort will have none of it. The material assumes
+none, but the *first hour* decides whether they engage or decide the
+whole thing is beyond them.
+
+[00-first-session.md](00-first-session.md) is written for exactly that
+student: what the four words mean, what a terminal is, and twenty
+minutes of driving a rover. Have them read it before session one.
+
+**Run session one back-to-front.** Demonstrate the Moon rover driving
+and building a map in the first ten minutes, before explaining anything.
+Robotics sells itself; a lecture on middleware does not. Once they have
+seen the rover stuck against a crater wall while RViz insists it is
+moving, they have a question, and the course is the answer to it.
+
+**Install the day before, without exception.** Thirty people pulling
+4 GB on lecture wifi does not work. If it cannot be guaranteed,
+distribute the image on USB sticks:
+
+```bash
+docker save ros2-gazebo-edu:jazzy | gzip > ros2-edu.tar.gz   # you
+docker load < ros2-edu.tar.gz                                # them
+```
+
+**Expect the terminal to be the real barrier, not ROS.** Students who
+have only ever used a GUI find a blinking cursor genuinely intimidating.
+Spend ten minutes on Up-arrow, Tab-completion and Ctrl+C before anything
+ROS-specific. It pays for itself within the hour.
+
+**Teach reading errors explicitly.** Beginners see a red wall and stop.
+Show them that the answer is nearly always the last line, and that
+"package not found" has two causes, both fixable in one command. This
+is a larger share of what they take away than any particular API.
+
+**The three failures that eat sessions**, all silent:
+
+| Symptom | Cause |
+|---|---|
+| Subscriber never fires | QoS mismatch: sensors publish Best Effort |
+| "package not found" | Terminal not sourced, or workspace not rebuilt |
+| Edits appear to do nothing | An older simulation still running |
+
+Cover the first in advance. It costs a minute to explain and an
+afternoon to discover.
+
+**Let them drive before they code.** The exercises land better once a
+student has felt the rover slip on a slope. Half an hour of unstructured
+driving at the start of session two is not wasted time.
+
 ## Suggested schedule
 
 | Session | Content | Hours |
