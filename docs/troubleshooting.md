@@ -176,6 +176,34 @@ On a machine with less than 16 GB, lower both — `memory=6GB` with
 `mem_limit: 4g` still runs the classroom world, though Moon and Mars will
 be slower.
 
+### The desktop is a small box in the middle of the browser tab
+
+The desktop is drawn at its native size and the rest of the tab is left
+empty, so it looks like a little window floating in grey. The resolution
+is fine — the viewer simply is not resizing it.
+
+This is noVNC's **Scaling Mode**, which upstream defaults to *None*. The
+image sets it to *Remote Resizing*, so if you are seeing the small-box
+behaviour, either your image predates that change or the browser cached
+the old setting.
+
+**Hard-refresh the tab first** (Ctrl+Shift+R) — noVNC caches its
+defaults file.
+
+Still small? Set it by hand: open the settings panel (the thin tab on the
+**left edge** of the noVNC window) → **Scaling Mode** → **Remote
+Resizing**. Or just put it in the URL:
+
+```
+http://localhost:6902/vnc.html?resize=remote
+```
+
+*Remote Resizing* tells the desktop to resize itself to the window, so
+text stays sharp. *Local Scaling* stretches the image instead: it also
+fills the tab, but blurs terminal output and RViz labels.
+
+Press **F11** for fullscreen once it fits.
+
 ### Not enough room for Gazebo, RViz and a terminal at once
 
 Every module after 02 asks you to watch the simulation, the ROS-side

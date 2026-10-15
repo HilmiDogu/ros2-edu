@@ -102,6 +102,28 @@ RUN printf '%s\n' \
     > /etc/profile.d/ros2.sh \
     && cat /etc/profile.d/ros2.sh >> /etc/bash.bashrc
 
+# --- noVNC viewer defaults ----------------------------------------------
+# noVNC ships with resize=off, which draws the desktop at its native size
+# in a fixed box and leaves the rest of the browser tab empty -- the
+# desktop looks like a small window floating in a grey void, and students
+# reasonably assume the resolution is wrong.
+#
+# 'remote' makes the DESKTOP resize itself to the browser window, so it
+# fills the tab and re-fits on every resize or F11. ('scale' would
+# stretch the image instead: it also fills the tab, but blurs text, which
+# matters when you are reading terminal output and RViz labels all day.)
+#
+# defaults.json is read by noVNC at load and can still be overridden per
+# user in the settings panel, unlike mandatory.json which would lock it.
+RUN printf '%s\n' \
+    '{' \
+    '  "resize": "remote",' \
+    '  "reconnect": "true",' \
+    '  "reconnect_delay": "2000",' \
+    '  "quality": "6"' \
+    '}' \
+    > /usr/libexec/noVNCdim/defaults.json
+
 # --- Self-provisioning on desktop login ---------------------------------
 # The desktop icons and the colcon build live in the container's own
 # filesystem, not in the bind-mounted /workspace. Anyone who starts the
