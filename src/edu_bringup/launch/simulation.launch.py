@@ -88,7 +88,7 @@ def generate_launch_description():
         hm = os.path.join(pkg_edu_bringup, 'models', 'ground', 'heightmap.png')
         if not os.path.exists(hm):
             return '0.15'
-        SPAN, VRANGE, ZOFF = 30.0, 12.0, -5.4
+        SPAN, VRANGE, ZOFF = 30.0, 6.0, -2.7
         img = Image.open(hm).convert('L')
         px, n = img.load(), img.size[0]
         x, y = SPAWN_X, SPAWN_Y

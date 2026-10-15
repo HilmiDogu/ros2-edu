@@ -21,13 +21,24 @@ import os
 from PIL import Image
 
 SPAN = 30.0        # metres across (X and Y)
-VRANGE = 12.0      # metres of elevation (black->white)
+VRANGE = 6.0       # metres of elevation (black->white)
 #
-# 4 m of relief over a 40 m span is a 10% grade -- geometrically correct
-# but visually flat: the craters and hills were there and simply did not
-# read as terrain. 12 m over 30 m makes the mounds genuinely unclimbable
-# and the craters visibly deep, which is the point of having them.
-ZOFF = -5.4        # mid-grey (0.45) sits near z=0: -0.45*VRANGE
+# Sized by measuring what the rover can actually drive, not by eye.
+#
+#   4 m over a 40 m span: median slope ~8 deg. Correct but visually flat
+#     -- the craters were there and read as nothing.
+#   12 m over 30 m: median 25 deg, with a tenth of the terrain past 56.
+#     Spectacular and undrivable; the rover lost 40% of its commanded
+#     distance to slip and slid 0.76 m downhill in 5 s with no command.
+#   6 m over 30 m: median ~13 deg. Real rovers manage 20-25 deg at best
+#     and Perseverance keeps to about 15, so this is the honest range --
+#     visibly sculpted, mostly drivable, with the steep mounds still
+#     genuinely off-limits.
+#
+# If you change this, re-measure rather than eyeball it: drive 10 s at
+# 0.5 m/s and check the rover covers most of the 5 m, then let go and
+# check it does not slide.
+ZOFF = -2.7        # mid-grey (0.45) sits near z=0: -0.45*VRANGE
 TILES = 8.0        # texture repeats across the terrain
 
 
