@@ -15,12 +15,18 @@ services:
       #   NOVNC_PORT=6910 docker compose -f docker/docker-compose.yml up -d
       - "${NOVNC_PORT:-6902}:6901"   # noVNC web client -> http://localhost:6902
       - "${VNC_PORT:-5902}:5901"     # raw VNC client (optional, native viewer)
-      # A SECOND screen, so Gazebo and RViz can each own a monitor rather
-      # than fighting over one. Nothing listens here until you start it:
-      #   docker exec -d ros2-gazebo-edu /workspace/docker/second_screen.sh
-      # then open http://localhost:6903 in a second browser window.
+      # EXTRA screens, so Gazebo, RViz and terminals can each own a
+      # monitor rather than fighting over one. Nothing listens on these
+      # until you start a screen:
+      #   docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 2
+      #   docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 3
+      # then open http://localhost:6903 / :6904 in their own windows.
+      # Screen N uses noVNC 690N+1 and VNC 590N+1, so a fourth screen is
+      # just another pair of lines here.
       - "${NOVNC_PORT_2:-6903}:6903"
       - "${VNC_PORT_2:-5903}:5903"
+      - "${NOVNC_PORT_3:-6904}:6904"
+      - "${VNC_PORT_3:-5904}:5904"
     environment:
       - VNC_PW=ros2edu
       # Size of the virtual screen the desktop is drawn on. 1600x900 was

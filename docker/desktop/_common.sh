@@ -36,3 +36,58 @@ hold_open() {
     echo "--- finished (exit code $1) ---"
     read -rp "Press Enter to close this window..."
 }
+
+# --- Multi-screen placement ---------------------------------------------
+# Gazebo and RViz together do not fit comfortably on one screen, so the
+# simulation launchers put them on their own displays: RViz on :2
+# (http://localhost:6903) and Gazebo on :3 (http://localhost:6904).
+#
+# Screens are started on demand rather than at boot, so nothing is spent
+# on them until something needs one -- and a container restart does not
+# leave a student with icons that silently open windows nowhere.
+
+# ensure_screen <n> -- start display :n if it is not already up.
+# Liveness is probed with `xrandr -q`: it is read-only and correctly
+# reports a dead display, unlike `xsetroot -q`, which is not a real flag
+# and fails even against a running screen.
+# Returns 0 if the display is usable afterwards, 1 if not.
+ensure_screen() {
+    local n="$1"
+    if DISPLAY=":${n}" xrandr -q >/dev/null 2>&1; then
+        return 0        # already running and accepting clients
+    fi
+
+    # A dead screen can leave its socket behind; the start script's own
+    # "already running" check would then pass while every client is
+    # refused. Clear the stale entry before trying.
+    if ! pgrep -f "Xvnc :${n}" >/dev/null 2>&1; then
+        rm -f "/tmp/.X11-unix/X${n}" "/tmp/.X${n}-lock" 2>/dev/null || true
+    fi
+
+    echo "Starting screen ${n} (http://localhost:690$((n+1))) ..."
+    bash /workspace/docker/extra_screen.sh "${n}" >/dev/null 2>&1 || true
+
+    # Verify rather than assume: a screen that failed to start must not
+    # silently swallow the window we are about to place on it.
+    local i
+    for i in $(seq 1 15); do
+        if DISPLAY=":${n}" xrandr -q >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 1
+    done
+
+    echo "  could not start screen ${n}; using this screen instead." >&2
+    return 1
+}
+
+# run_on_screen <n> <command...> -- run a GUI on display :n, falling back
+# to the current display if that screen cannot be started.
+run_on_screen() {
+    local n="$1"; shift
+    if ensure_screen "${n}"; then
+        DISPLAY=":${n}" "$@" &
+    else
+        "$@" &
+    fi
+}
