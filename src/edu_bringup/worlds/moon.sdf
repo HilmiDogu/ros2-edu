@@ -44,8 +44,13 @@
     <gravity>0 0 -1.62</gravity>
 
     <scene>
-      <ambient>0.3 0.3 0.3 1</ambient>
-      <background>0.02 0.02 0.03 1</background>
+      <!-- Low ambient: on an airless body there is no sky light to
+           fill the shadows, and a bright ambient also washes the
+           stars out of the backdrop. -->
+      <ambient>0.12 0.12 0.14 1</ambient>
+      <!-- Near-black: the starfield sphere provides the sky now, and
+           this only shows through where the dome does not. -->
+      <background>0.0 0.0 0.01 1</background>
       <shadows>true</shadows>
     </scene>
 
@@ -54,8 +59,31 @@
       <pose>0 0 20 0 0 0</pose>
       <diffuse>1.0 1.0 0.98 1</diffuse>
       <specular>0.3 0.3 0.3 1</specular>
-      <direction>-0.4 0.2 -0.9</direction>
+      <!-- A LOW sun: 18 degrees above the horizon, azimuth 205.
+           <direction> is the way the light travels, so this points down
+           and away from a sun sitting behind-left of the spawn point.
+           The previous -0.4 0.2 -0.9 put it 64 degrees up -- nearly
+           overhead, which flattens the terrain into featureless grey.
+           A low sun rakes across the craters and throws long shadows,
+           which is both how lunar imagery actually looks and far easier
+           to read. It also puts the sun where the rover camera can
+           occasionally see it.
+
+           MUST stay consistent with the sun disc in models/skydome: the
+           light is invisible and the disc emits nothing, so if they
+           disagree the shadows fall away from the visible sun. -->
+      <direction>0.862 0.402 -0.309</direction>
     </light>
+
+    <!-- The space backdrop: starfield, Earth and a sun disc. Static,
+         collision-free geometry, so the lidar passes through it and the
+         SLAM map is unaffected. See models/skydome/model.sdf for why
+         this is geometry rather than Gazebo's built-in <sky>. -->
+    <include>
+      <name>skydome</name>
+      <uri>model://skydome</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
 
     <!-- ===================== Heightmap terrain ====================== -->
     <!-- 40 x 40 m of terrain, 4 m of total vertical range. The heightmap

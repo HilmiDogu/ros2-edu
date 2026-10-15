@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!--
+  The space backdrop: a starfield sphere around the world, with Earth
+  hanging in it.
+
+  WHY THIS IS GEOMETRY AND NOT A GAZEBO <sky>
+
+  Gazebo's built-in <sky> draws an atmospheric sky -- blue gradient and
+  drifting clouds -- which is wrong on an airless body. It is also a
+  GUI-side effect, so the rover's camera never sees it: the 3-D view
+  would look like space while the camera image stayed black. Real
+  geometry is seen by every sensor, which is the whole point.
+
+  The dome is 120 m across, well outside the 30 m terrain and inside the
+  camera's 100 m far clip. Both parts are <static> so physics ignores
+  them, and neither has a <collision>, so the lidar passes straight
+  through and the SLAM map is unaffected -- a sky that showed up as an
+  obstacle would be worse than no sky at all.
+-->
+<sdf version="1.9">
+  <model name="skydome">
+    <static>true</static>
+
+    <!-- ===================== Starfield ====================== -->
+    <link name="stars">
+      <!-- Tipped slightly, so the Milky Way band does not sit exactly on
+           the horizon where the terrain hides it. -->
+      <pose>0 0 0 0.35 0 0.8</pose>
+      <visual name="stars_visual">
+        <geometry>
+          <mesh><uri>model://ground/skydome.obj</uri></mesh>
+        </geometry>
+        <material>
+          <!-- Emissive, not diffuse. Stars must not be dimmed by the
+               scene lighting: on the night side they would otherwise
+               vanish entirely, which is exactly where you want them. -->
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0 0 0 1</specular>
+          <emissive>1 1 1 1</emissive>
+          <pbr>
+            <metal>
+              <albedo_map>model://ground/materials/textures/starfield.png</albedo_map>
+              <emissive_map>model://ground/materials/textures/starfield.png</emissive_map>
+            </metal>
+          </pbr>
+        </material>
+        <cast_shadows>false</cast_shadows>
+      </visual>
+    </link>
+
+    <!-- ======================= Earth ======================== -->
+    <!-- A billboard disc rather than a sphere: at this distance the
+         difference is invisible, and the texture already carries the
+         sphere shading. Placed high and to one side so it is in shot
+         from the rover but not directly overhead. -->
+    <link name="earth">
+      <!-- Roughly opposite the sun, so both are not in frame at once
+           and the Earth sits against dark sky rather than glare. -->
+      <pose>62 48 44 1.5707 0 0.65</pose>
+      <visual name="earth_visual">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>16 16</size>
+          </plane>
+        </geometry>
+        <material>
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0 0 0 1</specular>
+          <emissive>1 1 1 1</emissive>
+          <pbr>
+            <metal>
+              <albedo_map>model://ground/materials/textures/earth.png</albedo_map>
+              <emissive_map>model://ground/materials/textures/earth.png</emissive_map>
+            </metal>
+          </pbr>
+        </material>
+        <cast_shadows>false</cast_shadows>
+      </visual>
+    </link>
+
+    <!-- ======================== Sun ========================= -->
+    <!-- The world's <light> provides the illumination; this is only the
+         visible disc, so the light has somewhere to appear to come from.
+         Small and very bright, like the real thing from lunar orbit. -->
+    <link name="sun_disc">
+      <!-- Placed on the vector the world's directional light comes
+           FROM: elevation 18 deg, azimuth 205, at 95 m. Recompute both
+           together if you move either. -->
+      <pose>-81.9 -38.2 29.4 1.5707 0 -0.44</pose>
+      <visual name="sun_visual">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>7 7</size>
+          </plane>
+        </geometry>
+        <material>
+          <ambient>1 1 0.95 1</ambient>
+          <diffuse>1 1 0.95 1</diffuse>
+          <emissive>1 1 0.9 1</emissive>
+        </material>
+        <cast_shadows>false</cast_shadows>
+      </visual>
+    </link>
+  </model>
+</sdf>

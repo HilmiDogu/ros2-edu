@@ -51,8 +51,24 @@
       <pose>0 0 20 0 0 0</pose>
       <diffuse>1.0 0.88 0.72 1</diffuse>
       <specular>0.25 0.22 0.18 1</specular>
-      <direction>-0.5 0.3 -0.9</direction>
+      <!-- A low sun (18 deg elevation, azimuth 205), matching moon.sdf
+           and the sun disc in models/skydome. <direction> is the way the
+           light travels, so this comes from behind-left of the spawn.
+           A high sun flattens the terrain into featureless ground; a low
+           one rakes across the craters and throws the long shadows that
+           make the relief readable. -->
+      <direction>0.862 0.402 -0.309</direction>
     </light>
+
+    <!-- The space backdrop: starfield, Earth and a sun disc. Static,
+         collision-free geometry, so the lidar passes through it and the
+         SLAM map is unaffected. See models/skydome/model.sdf for why
+         this is geometry rather than Gazebo's built-in <sky>. -->
+    <include>
+      <name>skydome</name>
+      <uri>model://skydome</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
 
     <!-- ===================== Heightmap terrain ====================== -->
     <!-- Terrain as a MESH, not a heightmap: DART tunnels through heightmap
