@@ -440,9 +440,16 @@
          one is purely for visualisation.
 
          16 vertical rays over +/- 15 degrees, tilted down so they sweep
-         the ground ahead instead of the sky. 16 x 180 = 2880 points per
-         sweep at 5 Hz, which software rendering can carry; raising
-         either number is the first thing to cost you frame rate. -->
+         the ground ahead instead of the sky.
+
+         16 x 90 = 1440 points per sweep at 4 Hz. The first attempt asked
+         for 16 x 180 at 5 Hz and measured 1.7 Hz: software rendering
+         simply could not trace 2880 rays that often, and a sensor that
+         silently delivers a third of its requested rate is worse than
+         one that asks for less. Halving the horizontal samples costs
+         little -- the terrain is smooth between rays -- and buys back
+         the rate. Raise either number and check `ros2 topic hz` actually
+         follows before believing it. -->
     <link name="lidar3d_link">
       <pose>0.15 0 0.38 0 0.15 0</pose>
       <inertial>
@@ -461,13 +468,13 @@
         <pose>0 0 0 0 0 0</pose>
         <topic>points</topic>
         <gz_frame_id>lidar3d_link</gz_frame_id>
-        <update_rate>5</update_rate>
+        <update_rate>4</update_rate>
         <always_on>true</always_on>
         <visualize>false</visualize>
         <lidar>
           <scan>
             <horizontal>
-              <samples>180</samples>
+              <samples>90</samples>
               <resolution>1</resolution>
               <min_angle>-3.14159</min_angle>
               <max_angle>3.14159</max_angle>

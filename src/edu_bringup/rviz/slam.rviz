@@ -141,6 +141,39 @@ Visualization Manager:
 
     # The map built by slam_toolbox. Empty until module 04's SLAM node
     # is running - that is expected, not a fault.
+    # 3-D lidar terrain cloud, coloured by height. The SLAM map below is
+    # a flat occupancy grid with no elevation in it; this is where the
+    # craters, hills and rocks show up as shape.
+    #
+    # Best Effort is not optional: sensor data is published best-effort,
+    # and a Reliable subscriber silently receives nothing from it.
+    - Class: rviz_default_plugins/PointCloud2
+      Name: TerrainCloud
+      Enabled: true
+      Topic:
+        Value: /points/points
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+        History Policy: Keep Last
+      Style: Points
+      Size (Pixels): 3
+      Alpha: 1
+      Color Transformer: AxisColor
+      Axis: Z
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 3
+        Min Value: -3
+        Value: true
+      Decay Time: 0
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+
     - Class: rviz_default_plugins/Map
       Name: Map
       Enabled: true

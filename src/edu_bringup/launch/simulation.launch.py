@@ -43,6 +43,19 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 
+# Where the robot starts, in world metres.
+#
+# NOT (-4,-4): on the sculpted Moon/Mars terrain that point sits on a
+# 0.52 m/m slope -- a 27 degree incline inside a crater wall. The rover
+# spawned part-way down it and could not climb out, which looks like a
+# traction bug rather than a bad spawn. (-4.4,-1.6) measures 0.09 m/m,
+# effectively flat, and is 2.2 m clear of the nearest rock.
+#
+# If you reshape the terrain, re-check this: models/ground has the
+# heightmap these numbers were measured from.
+SPAWN_X, SPAWN_Y = -4.4, -1.6
+
+
 def generate_launch_description():
     pkg_edu_bringup = get_package_share_directory('edu_bringup')
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
@@ -78,7 +91,7 @@ def generate_launch_description():
         SPAN, VRANGE, ZOFF = 30.0, 12.0, -5.4
         img = Image.open(hm).convert('L')
         px, n = img.load(), img.size[0]
-        x, y = -4.0, -4.0
+        x, y = SPAWN_X, SPAWN_Y
         u = (x + SPAN / 2.0) / SPAN
         v = (SPAN / 2.0 - y) / SPAN          # row 0 is +y
         i = min(max(int(round(u * (n - 1))), 0), n - 1)
@@ -133,7 +146,8 @@ def generate_launch_description():
     # is right. moon and mars use a sculpted mesh whose surface at the
     # spawn point sits metres below zero; dropping the rover from 0.15
     # there makes it fall, bounce and sometimes tunnel through.
-    spawn_common = ['-file', robot_sdf, '-name', robot, '-x', '-4.0', '-y', '-4.0']
+    spawn_common = ['-file', robot_sdf, '-name', robot,
+                    '-x', str(SPAWN_X), '-y', str(SPAWN_Y)]
 
     spawn_flat = Node(
         package='ros_gz_sim',

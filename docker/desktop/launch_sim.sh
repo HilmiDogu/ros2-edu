@@ -34,7 +34,7 @@ trap cleanup_guis EXIT INT TERM
     sleep 12
     run_on_screen 3 gz sim -g
     sleep 3
-    run_on_screen 2 rviz2 -d         /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot.rviz
+    run_on_screen 2 rviz2 -d         /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot_odom.rviz
 ) &
 
 ros2 launch edu_bringup simulation.launch.py gui:=false rviz:=false

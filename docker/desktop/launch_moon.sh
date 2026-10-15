@@ -22,7 +22,7 @@ ensure_screen 3 || true
 ensure_screen 2 || true
 
 echo "  Gazebo -> http://localhost:6904"
-echo "  RViz   -> http://localhost:6903"
+echo "  RViz   -> http://localhost:6903  (SLAM map builds here)"
 echo
 
 cleanup_guis() {
@@ -38,6 +38,17 @@ trap cleanup_guis EXIT INT TERM
     run_on_screen 3 gz sim -g
     sleep 3
     run_on_screen 2 rviz2 -d         /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot.rviz
+) &
+
+# SLAM, so the map builds as you drive without needing a second icon.
+# rviz:=false: the block above already opened RViz on screen 2, and that
+# config carries the Map display.
+#
+# Started after the GUIs because slam_toolbox activates once and does not
+# retry -- if /scan is silent at that moment it sits inert with no error.
+(
+    sleep 22
+    ros2 launch edu_bringup slam.launch.py rviz:=false > /tmp/slam_start.log 2>&1
 ) &
 
 ros2 launch edu_bringup simulation.launch.py world:=moon robot:=rover gui:=false rviz:=false

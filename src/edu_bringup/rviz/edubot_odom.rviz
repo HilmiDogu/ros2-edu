@@ -1,0 +1,269 @@
+Panels:
+  - Class: rviz_common/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /LaserScan1
+        - /RobotModel1
+      Splitter Ratio: 0.5
+    Tree Height: 620
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+
+Visualization Manager:
+  Class: ""
+  Name: root
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Alpha: 0.5
+      Cell Size: 1
+      Color: 160; 160; 164
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+      Value: true
+
+    # The robot, drawn from the URDF that robot_state_publisher loaded.
+    # If this shows nothing, robot_state_publisher is not running or the
+    # xacro failed to parse.
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Description Topic:
+        Value: /robot_description
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Alpha: 1
+      Visual Enabled: true
+      Collision Enabled: false
+      Value: true
+
+    # The lidar returns. Coloured by intensity, sized large enough to be
+    # visible over a browser VNC connection.
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan
+      Enabled: true
+      Topic:
+        Value: /scan
+        Depth: 5
+        Durability Policy: Volatile
+        # BEST_EFFORT, to match the sensor publisher. Set this to
+        # Reliable and the display silently stays empty.
+        Reliability Policy: Best Effort
+        History Policy: Keep Last
+      Style: Points
+      Size (Pixels): 4
+      Alpha: 1
+      Color: 255; 60; 40
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Position Transformer: XYZ
+      Queue Size: 10
+      Value: true
+
+    # The path odometry believes the robot has taken. Compare it with
+    # where the robot actually is in Gazebo: the gap is drift.
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: true
+      Topic:
+        Value: /odom
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+        History Policy: Keep Last
+      Covariance:
+        Value: false
+      Keep: 100
+      Position Tolerance: 0.1
+      Angle Tolerance: 0.1
+      Shape:
+        Alpha: 1
+        Color: 255; 210; 0
+        Head Length: 0.1
+        Head Radius: 0.06
+        Shaft Length: 0.25
+        Shaft Radius: 0.03
+        Value: Arrow
+      Value: true
+
+    # GROUND TRUTH: where the robot actually is, from Gazebo. Compare
+    # it with the yellow Odometry arrows above -- when they separate, the
+    # robot's wheels are lying to it. Driving into a wall separates them
+    # dramatically.
+    - Class: rviz_default_plugins/Odometry
+      Name: GroundTruth
+      Enabled: true
+      Topic:
+        Value: /odom_truth
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+        History Policy: Keep Last
+      Covariance:
+        Value: false
+      Keep: 100
+      Position Tolerance: 0.1
+      Angle Tolerance: 0.1
+      Shape:
+        Alpha: 1
+        Color: 0; 255; 80
+        Head Length: 0.1
+        Head Radius: 0.06
+        Shaft Length: 0.25
+        Shaft Radius: 0.03
+        Value: Arrow
+      Value: true
+
+    # A red sphere wherever collision_monitor detects wheel slip.
+    - Class: rviz_default_plugins/Marker
+      Name: CollisionMarkers
+      Enabled: true
+      Topic:
+        Value: /collision_markers
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+        History Policy: Keep Last
+      Value: true
+
+    # The map built by slam_toolbox. Empty until module 04's SLAM node
+    # is running - that is expected, not a fault.
+    # 3-D lidar terrain cloud, coloured by height. The SLAM map below is
+    # a flat occupancy grid with no elevation in it; this is where the
+    # craters, hills and rocks show up as shape.
+    #
+    # Best Effort is not optional: sensor data is published best-effort,
+    # and a Reliable subscriber silently receives nothing from it.
+    - Class: rviz_default_plugins/PointCloud2
+      Name: TerrainCloud
+      Enabled: true
+      Topic:
+        Value: /points/points
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+        History Policy: Keep Last
+      Style: Points
+      Size (Pixels): 3
+      Alpha: 1
+      Color Transformer: AxisColor
+      Axis: Z
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 3
+        Min Value: -3
+        Value: true
+      Decay Time: 0
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+
+    - Class: rviz_default_plugins/Map
+      Name: Map
+      Enabled: true
+      Topic:
+        Value: /map
+        Depth: 5
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        History Policy: Keep Last
+      Alpha: 0.7
+      Color Scheme: map
+      Draw Behind: true
+      Value: true
+
+    # The camera image. Disabled by default: decoding video over a
+    # software-rendered VNC session is the most expensive display here,
+    # and students can switch it on when module 02 asks them to.
+    - Class: rviz_default_plugins/Image
+      Name: Camera
+      Enabled: false
+      Topic:
+        Value: /camera
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+        History Policy: Keep Last
+      Max Value: 1
+      Min Value: 0
+      Normalize Range: true
+      Value: false
+
+    # The coordinate frames. Also off by default - with every frame shown
+    # at once the view becomes unreadable. Module 03 turns it on.
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: false
+      Frame Timeout: 15
+      Marker Scale: 0.4
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+      Value: false
+
+  Global Options:
+    Background Color: 48; 48; 48
+    # 'odom' rather than 'map': before SLAM runs there is no map frame,
+    # and RViz shows an error with a blank screen if the fixed frame does
+    # not exist. odom always exists once the simulation is up.
+    # 'odom' here, unlike edubot.rviz. This config is for a simulation
+    # started WITHOUT SLAM (the classroom icon), where no map frame is
+    # ever published and a fixed frame of 'map' would leave RViz showing
+    # nothing but a frame error.
+    Fixed Frame: odom
+    Frame Rate: 20
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+  Value: true
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Distance: 12
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Pitch: 0.8
+      Yaw: 0.8
+      Target Frame: <Fixed Frame>
+      Near Clip Distance: 0.01
+      Value: Orbit (rviz_default_plugins)
+    Saved: ~
+
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 900
+  Width: 1400
+  Hide Left Dock: false
+  Hide Right Dock: true
+  QMainWindow State: ""
