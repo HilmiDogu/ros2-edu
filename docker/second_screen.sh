@@ -77,6 +77,22 @@ export DISPLAY=":${DISPLAY_NUM}"
 nohup xfwm4 --display="${DISPLAY}" >/tmp/second_screen_wm.log 2>&1 &
 sleep 1
 
+# Paint the root window. Without this the screen is pure black, which is
+# indistinguishable from "the second screen is broken" -- the display is
+# fine, there is simply nothing drawn on it yet. A solid colour makes it
+# obvious the screen is live and waiting for an app.
+xsetroot -solid "#1d3a52" 2>/dev/null || true
+
+# A terminal, so the screen is useful the moment you open it rather than
+# requiring you to go back to screen 1 to launch anything. xfce4-terminal
+# rather than xterm: xterm fails here with a missing-font error.
+if command -v xfce4-terminal >/dev/null 2>&1; then
+    nohup xfce4-terminal --geometry=100x24+40+40 \
+        --title="screen 2 - DISPLAY=:${DISPLAY_NUM}" \
+        >/tmp/second_screen_term.log 2>&1 &
+fi
+sleep 1
+
 # noVNC in front of it so a browser can reach the screen.
 NOVNC_WEB=""
 # /usr/libexec/noVNCdim is where THIS base image puts them; the others
