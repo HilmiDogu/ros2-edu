@@ -131,6 +131,47 @@ In order of effectiveness:
    [`classroom.sdf`](../src/edu_bringup/worlds/classroom.sdf):
    `max_step_size` from `0.001` to `0.004`.
 
+### Windows: noVNC freezes, and `vmmemWSL` eats all the memory
+
+On Windows, Docker runs inside a WSL2 virtual machine whose process
+shows up in Task Manager as **`vmmemWSL`**. Left alone it may claim up to
+**half the host's RAM** and never give it back. Once Gazebo starts
+rendering in software and the VM hits that ceiling, Windows begins
+swapping and the whole VM stalls — which looks like noVNC hanging
+mid-simulation.
+
+Cap the VM. Create `C:\Users\<you>\.wslconfig`:
+
+```ini
+[wsl2]
+memory=8GB               # on a 16GB machine; use half your RAM
+processors=8             # leave some cores for Windows and the browser
+swap=4GB
+autoMemoryReclaim=gradual   # hand freed memory back instead of hoarding
+pageReporting=true
+```
+
+Then apply it — this is required, the file is only read at VM start:
+
+```powershell
+wsl --shutdown
+```
+
+Restart Docker Desktop afterwards. Check it took effect:
+
+```powershell
+Get-Process vmmemWSL | Select-Object @{N='GB';E={[math]::Round($_.WorkingSet64/1GB,2)}}
+```
+
+`docker-compose.yml` also caps the container itself (`mem_limit: 6g`,
+`cpus: 6.0`). The two work together: `.wslconfig` bounds the whole VM,
+the compose limits bound the container inside it. Keep the container
+limit the smaller of the two.
+
+On a machine with less than 16 GB, lower both — `memory=6GB` with
+`mem_limit: 4g` still runs the classroom world, though Moon and Mars will
+be slower.
+
 ### The robot falls through the floor, or jitters
 
 Almost always bad inertia values in `model.sdf`. Mass and inertia must be

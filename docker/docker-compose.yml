@@ -25,7 +25,20 @@ services:
       - ..:/workspace
     # Gazebo's rendering and transport layers use shared memory heavily;
     # Docker's 64MB default causes intermittent crashes on world load.
-    shm_size: "2gb"
+    # 1gb is ample for these worlds and leaves more for the host -- on a
+    # 16GB laptop the old 2gb reservation was a meaningful slice of what
+    # WSL2 had to play with.
+    shm_size: "1gb"
+
+    # Hard caps, so a runaway simulation degrades instead of dragging
+    # Windows into swap. Gazebo's software renderer will use every core
+    # it is offered and starve the browser tab that is drawing noVNC.
+    #
+    # These complement ~/.wslconfig rather than replace it: .wslconfig
+    # caps the whole WSL2 VM, this caps the container inside it. You want
+    # both, and the container limit must be the smaller of the two.
+    mem_limit: 6g
+    cpus: 6.0
     # No `command:` on purpose -- the container runs the base image's
     # desktop startup and stays up. The colcon build is done afterwards
     # by up.sh, because startup.sh waits on its `vncserver` launcher PID:

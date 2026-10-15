@@ -56,6 +56,19 @@ runs start in seconds.
 > `$env:NOVNC_PORT=6910; .\docker\up.ps1` (PowerShell) or
 > `NOVNC_PORT=6910 ./docker/up.sh` (bash), then use that port below.
 
+> **On Windows, do this once first.** Docker runs inside a WSL2 virtual
+> machine that will otherwise claim up to half your RAM and stall the
+> simulation. Copy the supplied limits and restart WSL:
+>
+> ```powershell
+> copy docker\wslconfig-example.ini $env:USERPROFILE\.wslconfig
+> wsl --shutdown
+> ```
+>
+> Then restart Docker Desktop. Skipping this is the usual reason noVNC
+> freezes mid-simulation — see
+> [troubleshooting](docs/troubleshooting.md#windows-novnc-freezes-and-vmmemwsl-eats-all-the-memory).
+
 ### 2. Open the desktop
 
 Go to **<http://localhost:6902>** in any browser.
