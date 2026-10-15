@@ -93,6 +93,50 @@ RViz, teleop) must run inside the browser desktop.
 
 ---
 
+## 2b. The three screens
+
+The simulation icons spread themselves over three browser windows, so
+Gazebo, RViz and your terminals each get room:
+
+| URL | Shows |
+|-----|-------|
+| <http://localhost:6902> | The desktop — icons and terminals |
+| <http://localhost:6903> | RViz (display `:2`) |
+| <http://localhost:6904> | Gazebo (display `:3`) |
+
+Open each in its own window, drag it to the monitor you want, **F11** to
+fullscreen. The extra screens start automatically when a simulation icon
+needs them, and the password is `ros2edu` throughout.
+
+Launching something onto a particular screen yourself is just a matter
+of setting `DISPLAY` first:
+
+```bash
+DISPLAY=:2 rviz2 -d /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot.rviz
+DISPLAY=:3 gz sim -g
+```
+
+To drive the layout entirely by hand, run the simulation headless and
+place both GUIs yourself:
+
+```bash
+ros2 launch edu_bringup simulation.launch.py gui:=false rviz:=false
+DISPLAY=:3 gz sim -g &
+DISPLAY=:2 rviz2 -d /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot.rviz &
+```
+
+Screens are processes, not settings — they are gone after
+`docker compose down`. A simulation icon brings them back, or start one
+directly:
+
+```bash
+docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 2
+```
+
+Prefer everything on one screen? Run the launch file directly rather
+than using an icon: `ros2 launch edu_bringup simulation.launch.py` puts
+Gazebo and RViz on whichever display you ran it from.
+
 ## 3. Running each module
 
 ### Module 01 — core concepts
@@ -133,6 +177,13 @@ Useful arguments:
 ros2 launch edu_bringup simulation.launch.py rviz:=false   # lighter
 ros2 launch edu_bringup simulation.launch.py gui:=false    # no 3D window
 ```
+
+**Seeing the terrain in 3D.** The flat SLAM map has no height in it. The
+rover also carries a 3-D lidar publishing a point cloud, which does: in
+RViz, **Add** → **PointCloud2**, set its topic to `/points/points`,
+**Reliability Policy** to **Best Effort** (it stays empty otherwise) and
+**Color Transformer** to **AxisColor** on axis `Z`. Craters and the
+ridge then stand out by colour.
 
 ### Module 03 — TF and odometry
 

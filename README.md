@@ -106,6 +106,45 @@ so you can read any error rather than watching the window vanish.
 > GPU in the container, so it renders in software. A grey window during
 > that time is normal.
 
+### Three screens, one per window
+
+Gazebo, RViz and a terminal do not fit comfortably together on one
+screen, so **02 Gazebo World**, **06 Moon Rover** and **07 Mars Rover**
+spread themselves across three:
+
+| Open in your browser | Shows |
+|----------------------|-------|
+| <http://localhost:6902> | The desktop: icons and terminals |
+| <http://localhost:6903> | **RViz** |
+| <http://localhost:6904> | **Gazebo** |
+
+Open each in its own browser window and drag it to whichever monitor you
+want, then press **F11** to fullscreen it. One double-click sets all
+three up — the extra screens start themselves when an icon needs them.
+
+The other icons (teleop, navigation, the camera) stay on the main
+desktop, since each is a single window.
+
+> **Only see 6902?** The extra screens start on demand, so they exist
+> only once a simulation icon has been clicked. If one still will not
+> load, start it by hand:
+>
+> ```powershell
+> docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 2
+> docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 3
+> ```
+
+To put something on a particular screen yourself, set `DISPLAY` when you
+launch it:
+
+```bash
+DISPLAY=:2 rviz2        # screen 2, port 6903
+DISPLAY=:3 gz sim -g    # screen 3, port 6904
+```
+
+Screens are processes, not settings: they do not survive
+`docker compose down`. Clicking a simulation icon brings them back.
+
 ### Prefer typing?
 
 Double-click **ROS 2 Terminal** — ROS is already sourced — and run:

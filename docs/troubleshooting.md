@@ -229,11 +229,17 @@ so the desktop follows the window size.
 **2. A second screen, one app per monitor.** Start another display:
 
 ```powershell
-docker exec ros2-gazebo-edu bash /workspace/docker/second_screen.sh
+docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 2
+docker exec ros2-gazebo-edu bash /workspace/docker/extra_screen.sh 3
 ```
 
-Then open **<http://localhost:6903>** in a second browser window and
-drag it to your other monitor. Put an app there by setting `DISPLAY`
+Then open **<http://localhost:6903>** (RViz) and **<http://localhost:6904>**
+(Gazebo) in their own browser windows and drag them to your other
+monitors.
+
+Normally you do not need to: the simulation icons start these screens
+themselves and place Gazebo and RViz on them. Run the commands above
+only if a screen fails to appear. Put an app there by setting `DISPLAY`
 when you launch it:
 
 ```bash
