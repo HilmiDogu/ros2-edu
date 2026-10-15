@@ -6,6 +6,10 @@ Work down the list. Most problems are one of the first five.
 
 ## Getting started
 
+> Not installed Docker yet? See
+> [installing-docker.md](installing-docker.md) for step-by-step
+> instructions on Windows, Linux and macOS.
+
 ### The browser shows nothing at localhost:6902
 
 ```bash

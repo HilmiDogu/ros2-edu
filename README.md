@@ -19,8 +19,16 @@ simulated world; RViz shows what the robot senses and the map it builds.*
 
 ## Getting started
 
-You need [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-and nothing else. Make sure it is **running** before you start.
+You need [Docker](https://www.docker.com/products/docker-desktop/) and
+nothing else — no ROS, no Linux install, no Python.
+
+**Don't have Docker yet?** Follow
+[docs/installing-docker.md](docs/installing-docker.md) first — step-by-step
+for Windows, Linux and macOS, including the WSL memory limit Windows
+users must set. Do it the day before, not at the start of the session:
+the first run downloads several GB.
+
+Already have it? Make sure Docker is **running** before you start.
 
 ### 1. Clone and start
 
@@ -30,14 +38,13 @@ cd ros2-gazebo-edu-max
 
 .\docker\up.ps1          # Windows PowerShell
 ```
-> 💡 **Troubleshooting (Windows Execution Policy Error):**
-> If you get an error saying `File ... cannot be loaded because running scripts is disabled on this system`, run the following command in PowerShell to allow script execution for your current session, then try again:
+> **PowerShell refuses to run the script?** If you see *"cannot be
+> loaded because running scripts is disabled on this system"*, allow
+> scripts for this window only, then run it again:
+>
 > ```powershell
->Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
->```
->```powershell
->.\docker\up.ps1
->```
+> Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+> ```
 
 ```bash
 git clone <this-repository>
@@ -199,6 +206,7 @@ Work through these in order. Each builds on the one before.
 
 Supporting material:
 
+- [Installing Docker](docs/installing-docker.md) — Windows, Linux and macOS, from scratch
 - [Usage guide](docs/usage.md) — how to start it and run every example
 - [Exercises](docs/exercises.md) — the hands-on tasks, with solutions
 - [Troubleshooting](docs/troubleshooting.md) — when something does not work
