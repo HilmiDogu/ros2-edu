@@ -71,7 +71,12 @@
       </visual>
       <!-- A solar-deck-ish top plate, purely cosmetic. -->
       <visual name="deck_visual">
-        <pose>0 0 0.08 0 0 0</pose>
+        <!-- z=0.075 puts the slab bottom at 0.065, a clear 5 mm
+             above the 0.06 chassis top. At 0.08 the faces were
+             1 cm apart and the depth buffer could not separate
+             them reliably under software rendering: the surfaces
+             flickered in Gazebo, the camera and RViz alike. -->
+        <pose>0 0 0.075 0 0 0</pose>
         <geometry><box><size>0.5 0.34 0.02</size></box></geometry>
         <material>
           <ambient>0.10 0.12 0.25 1</ambient>
@@ -499,7 +504,11 @@
     <!-- Mastcam: mounted on top of the mast, looking forward. Same topic
          and frame name as edubot so the image bridge is unchanged. -->
     <link name="camera_link">
-      <pose>-0.10 0 0.33 0 0 0</pose>
+      <!-- In FRONT of the mast (which is at x=-0.12) and above the
+           deck, so it sees the terrain rather than the rover. It
+           previously sat at x=-0.10, 2 cm from the mast centre,
+           and filled most of the image with its own mast. -->
+      <pose>-0.04 0 0.40 0 0.10 0</pose>
       <inertial>
         <mass>0.2</mass>
         <inertia>

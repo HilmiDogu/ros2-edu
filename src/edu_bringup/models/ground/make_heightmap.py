@@ -36,6 +36,23 @@ def hills(nx, ny):
     return h
 
 
+def mound(nx, ny, cx, cy, radius, height):
+    """A steep hill centred at (cx,cy): a NO-GO area.
+
+    Deliberately much steeper than the rolling `hills` above. A gaussian
+    rather than a cosine falloff, so the flanks keep rising instead of
+    levelling off -- the rover loses traction partway up and slides back,
+    which is the point. In low gravity this happens sooner than students
+    expect, and is the terrain equivalent of an obstacle the planner has
+    to route around rather than drive over.
+    """
+    d = math.hypot(nx - cx, ny - cy)
+    if d > radius:
+        return 0.0
+    t = d / radius
+    return height * math.exp(-(t * t) / 0.18)
+
+
 def crater(nx, ny, cx, cy, radius, depth, rim):
     """A bowl depression centred at (cx,cy) in 0..1 coords. Negative in the
     middle (dug out), with a slightly raised rim, fading to 0 outside."""
@@ -56,13 +73,38 @@ CRATERS = [
     # (cx, cy, radius, depth, rim)
     (0.62, 0.58, 0.14, 0.22, 0.04),   # big, deep
     (0.38, 0.66, 0.09, 0.12, 0.03),   # medium
-    (0.70, 0.30, 0.07, 0.10, 0.02),   # small
     (0.22, 0.28, 0.11, 0.16, 0.03),   # medium, SW
     (0.80, 0.72, 0.08, 0.13, 0.03),   # NE
     (0.50, 0.85, 0.10, 0.14, 0.03),   # N
     (0.15, 0.80, 0.06, 0.09, 0.02),   # small, NW
     (0.85, 0.15, 0.09, 0.15, 0.03),   # SE
     (0.30, 0.50, 0.05, 0.08, 0.02),   # small, central-W
+    # Small, sharp craters. A tight radius with a comparatively large
+    # depth makes a steep-sided pit that reads as a hole to drive around
+    # rather than a dish to roll through -- and gives the 3-D lidar some
+    # abrupt depth changes to show.
+    (0.70, 0.35, 0.040, 0.16, 0.02),  # pit, E
+    (0.44, 0.22, 0.035, 0.14, 0.02),  # pit, S
+    (0.58, 0.76, 0.045, 0.15, 0.02),  # pit, NNE
+    (0.12, 0.45, 0.038, 0.13, 0.02),  # pit, W
+    (0.90, 0.52, 0.042, 0.15, 0.02),  # pit, far E
+    # A crater pair, close enough that the ridge between them is a
+    # natural narrow pass.
+    (0.26, 0.62, 0.070, 0.13, 0.035),
+    (0.26, 0.74, 0.070, 0.13, 0.035),
+]
+
+# Steep hills the rover cannot climb: no-go areas it must route around.
+# Height is in the same 0..1 units as everything else, so with the 4 m
+# vertical range in moon.sdf a 0.20 mound stands ~0.8 m proud of its
+# surroundings over a couple of metres -- far too steep for the rover.
+MOUNDS = [
+    # (cx, cy, radius, height)
+    (0.78, 0.26, 0.11, 0.26),   # big massif, SE
+    (0.18, 0.18, 0.09, 0.22),   # SW
+    (0.46, 0.44, 0.07, 0.18),   # central, splits the arena
+    (0.86, 0.86, 0.10, 0.24),   # far NE corner
+    (0.08, 0.62, 0.075, 0.20),  # W
 ]
 
 
@@ -74,6 +116,10 @@ def main():
         for i in range(N):
             nx, ny = i / (N - 1), j / (N - 1)
             h = BASE + hills(nx, ny)
+            for (cx, cy, r, hgt) in MOUNDS:
+                h += mound(nx, ny, cx, cy, r, hgt)
+            # Craters last, so a crater placed on a slope still digs in
+            # rather than being filled by the mound added after it.
             for (cx, cy, r, dep, rim) in CRATERS:
                 h += crater(nx, ny, cx, cy, r, dep, rim)
             h = max(0.0, min(1.0, h))
