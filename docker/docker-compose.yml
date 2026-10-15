@@ -15,9 +15,24 @@ services:
       #   NOVNC_PORT=6910 docker compose -f docker/docker-compose.yml up -d
       - "${NOVNC_PORT:-6902}:6901"   # noVNC web client -> http://localhost:6902
       - "${VNC_PORT:-5902}:5901"     # raw VNC client (optional, native viewer)
+      # A SECOND screen, so Gazebo and RViz can each own a monitor rather
+      # than fighting over one. Nothing listens here until you start it:
+      #   docker exec -d ros2-gazebo-edu /workspace/docker/second_screen.sh
+      # then open http://localhost:6903 in a second browser window.
+      - "${NOVNC_PORT_2:-6903}:6903"
+      - "${VNC_PORT_2:-5903}:5903"
     environment:
       - VNC_PW=ros2edu
-      - VNC_RESOLUTION=1600x900
+      # Size of the virtual screen the desktop is drawn on. 1600x900 was
+      # too small to show Gazebo, RViz and a terminal at once, which is
+      # exactly what every module after 02 asks you to do.
+      #
+      # Override per machine without editing this file:
+      #   $env:VNC_RESOLUTION="2560x1440"; docker compose ... up -d
+      # Match it to your largest monitor; going beyond that just makes
+      # the browser scale the image down again. Bigger costs CPU in the
+      # software renderer, so do not pick 4K "just in case".
+      - VNC_RESOLUTION=${VNC_RESOLUTION:-1920x1080}
     volumes:
       # The whole workspace is bind-mounted, so edits made on the host in
       # VS Code appear instantly inside the container and survive a

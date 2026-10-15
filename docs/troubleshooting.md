@@ -172,6 +172,53 @@ On a machine with less than 16 GB, lower both — `memory=6GB` with
 `mem_limit: 4g` still runs the classroom world, though Moon and Mars will
 be slower.
 
+### Not enough room for Gazebo, RViz and a terminal at once
+
+Every module after 02 asks you to watch the simulation, the ROS-side
+view and a terminal together, which does not fit comfortably on one
+small screen. Two ways to get more room — they stack, so use both.
+
+**1. A bigger virtual screen.** The desktop defaults to 1920x1080. Match
+it to your largest monitor:
+
+```powershell
+$env:VNC_RESOLUTION="2560x1440"
+docker compose -f docker/docker-compose.yml up -d
+```
+
+Going beyond your monitor's own resolution just makes the browser scale
+the image back down, and costs CPU in the software renderer — so do not
+pick 4K speculatively.
+
+In the browser, press **F11** for fullscreen, and open noVNC's settings
+(the tab on the left edge) to turn **Scaling Mode** to *Remote Resizing*
+so the desktop follows the window size.
+
+**2. A second screen, one app per monitor.** Start another display:
+
+```powershell
+docker exec ros2-gazebo-edu bash /workspace/docker/second_screen.sh
+```
+
+Then open **<http://localhost:6903>** in a second browser window and
+drag it to your other monitor. Put an app there by setting `DISPLAY`
+when you launch it:
+
+```bash
+# in the first screen's terminal: the simulation, without RViz
+ros2 launch edu_bringup simulation.launch.py rviz:=false
+
+# on the second screen: RViz alone, with the whole monitor to itself
+DISPLAY=:2 rviz2 -d /workspace/install/edu_bringup/share/edu_bringup/rviz/edubot.rviz
+```
+
+Both screens share the same ROS graph and the same password, and the
+second one costs very little when idle.
+
+**3. Xfce workspaces**, which need no configuration at all. The desktop
+has four; `Ctrl+Alt+→` / `←` switches between them. Put Gazebo on one and
+RViz on another and flip, rather than tiling them into strips.
+
 ### The robot falls through the floor, or jitters
 
 Almost always bad inertia values in `model.sdf`. Mass and inertia must be
