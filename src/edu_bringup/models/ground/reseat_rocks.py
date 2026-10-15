@@ -27,9 +27,9 @@ from PIL import Image
 # make_terrain_mesh.py. The mesh spans SIZE metres square, with the
 # heightmap's full 0..255 range mapped onto VERTICAL_RANGE metres, and
 # the image's mid-grey (BASE in make_heightmap.py) sitting at z=0.
-SIZE = 40.0           # SPAN in make_terrain_mesh.py
-VERTICAL_RANGE = 4.0  # VRANGE
-ZOFF = -1.8           # ZOFF -- these three MUST match that script
+SIZE = 30.0           # SPAN in make_terrain_mesh.py
+VERTICAL_RANGE = 12.0 # VRANGE
+ZOFF = -5.4           # ZOFF -- these three MUST match that script
 
 # Rocks are meshes whose origin is near their centre, so seating one
 # exactly on the surface half-buries it. A small lift puts it on the

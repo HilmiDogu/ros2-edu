@@ -504,11 +504,15 @@
     <!-- Mastcam: mounted on top of the mast, looking forward. Same topic
          and frame name as edubot so the image bridge is unchanged. -->
     <link name="camera_link">
-      <!-- In FRONT of the mast (which is at x=-0.12) and above the
-           deck, so it sees the terrain rather than the rover. It
-           previously sat at x=-0.10, 2 cm from the mast centre,
-           and filled most of the image with its own mast. -->
-      <pose>-0.04 0 0.40 0 0.10 0</pose>
+      <!-- At the very FRONT of the deck, ahead of every other sensor.
+           The camera looks along +x, so anything with a larger x is in
+           shot: at x=-0.04 it stared straight into the two lidars
+           stacked at x=0.15, z=0.38-0.42, which filled the view with a
+           red cylinder over a blue one. The deck ends at x=+0.30, so
+           x=0.32 clears the whole rover; the 0.12 rad downward tilt
+           puts the horizon high in frame and the terrain ahead in the
+           middle of it. -->
+      <pose>0.32 0 0.22 0 0.12 0</pose>
       <inertial>
         <mass>0.2</mass>
         <inertia>

@@ -37,7 +37,8 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
 from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import (Command, LaunchConfiguration,
+                                  PathJoinSubstitution, PythonExpression)
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -64,6 +65,28 @@ def generate_launch_description():
     declare_gui = DeclareLaunchArgument(
         'gui', default_value='true',
         description='Show the Gazebo 3D window (false = headless)')
+
+    # Terrain height at the spawn point, read from the same heightmap the
+    # mesh is built from. Keeping this in step with make_terrain_mesh.py
+    # matters: if the terrain is regenerated with a different VRANGE, the
+    # spawn height has to follow or the rover starts underground.
+    def _terrain_spawn_z():
+        from PIL import Image
+        hm = os.path.join(pkg_edu_bringup, 'models', 'ground', 'heightmap.png')
+        if not os.path.exists(hm):
+            return '0.15'
+        SPAN, VRANGE, ZOFF = 30.0, 12.0, -5.4
+        img = Image.open(hm).convert('L')
+        px, n = img.load(), img.size[0]
+        x, y = -4.0, -4.0
+        u = (x + SPAN / 2.0) / SPAN
+        v = (SPAN / 2.0 - y) / SPAN          # row 0 is +y
+        i = min(max(int(round(u * (n - 1))), 0), n - 1)
+        j = min(max(int(round(v * (n - 1))), 0), n - 1)
+        z = (px[i, j] / 255.0) * VRANGE + ZOFF
+        return f'{z + 0.35:.2f}'             # clearance above the surface
+
+    spawn_z = _terrain_spawn_z()
 
     world_path = PathJoinSubstitution([pkg_edu_bringup, 'worlds', [world, '.sdf']])
 
@@ -102,14 +125,31 @@ def generate_launch_description():
     # launch spawns edubot or the rover from models/<robot>/model.sdf.
     robot_sdf = PathJoinSubstitution(
         [pkg_edu_bringup, 'models', robot, 'model.sdf'])
-    spawn_robot = Node(
+    # Two spawn nodes rather than one, because the right z depends on the
+    # world and `world` is a LaunchConfiguration -- not a Python value we
+    # can branch on here.
+    #
+    # classroom is a flat ground plane at z=0, so a small fixed clearance
+    # is right. moon and mars use a sculpted mesh whose surface at the
+    # spawn point sits metres below zero; dropping the rover from 0.15
+    # there makes it fall, bounce and sometimes tunnel through.
+    spawn_common = ['-file', robot_sdf, '-name', robot, '-x', '-4.0', '-y', '-4.0']
+
+    spawn_flat = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=[
-            '-file', robot_sdf,
-            '-name', robot,
-            '-x', '-4.0', '-y', '-4.0', '-z', '0.15',
-        ],
+        arguments=spawn_common + ['-z', '0.15'],
+        condition=IfCondition(PythonExpression(
+            ["'", world, "' == 'classroom'"])),
+        output='screen',
+    )
+
+    spawn_terrain = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=spawn_common + ['-z', spawn_z],
+        condition=UnlessCondition(PythonExpression(
+            ["'", world, "' == 'classroom'"])),
         output='screen',
     )
 
@@ -207,7 +247,8 @@ def generate_launch_description():
         declare_gui,
         gz_sim,
         gz_sim_headless,
-        spawn_robot,
+        spawn_flat,
+        spawn_terrain,
         bridge,
         image_bridge,
         robot_state_publisher,
