@@ -20,7 +20,7 @@ setup(
     maintainer='DFKI Robotics Teaching',
     maintainer_email='hilmi_dogu.kuecueker@dfki.de',
     description='Worked examples for the ROS 2 + Gazebo teaching workspace.',
-    license='Apache-2.0',
+    license='BSD-3-Clause',
     tests_require=['pytest'],
     entry_points={
         # Each line here is what makes `ros2 run edu_py_examples <name>`

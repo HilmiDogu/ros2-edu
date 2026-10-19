@@ -20,7 +20,7 @@ setup(
     maintainer='DFKI Robotics Teaching',
     maintainer_email='hilmi_dogu.kuecueker@dfki.de',
     description='Student exercises (with solutions) for the teaching workspace.',
-    license='Apache-2.0',
+    license='BSD-3-Clause',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

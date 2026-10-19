@@ -9,7 +9,7 @@
     The matching exercises live in edu_exercises.
   </description>
   <maintainer email="hilmi_dogu.kuecueker@dfki.de">DFKI Robotics Teaching</maintainer>
-  <license>Apache-2.0</license>
+  <license>BSD-3-Clause</license>
 
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>

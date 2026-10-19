@@ -376,6 +376,15 @@ from [Gazebo Fuel](https://app.gazebosim.org/OpenRobotics), licensed
 CC-BY. They are vendored under `src/edu_bringup/models/rock1` and
 `rock6` so the worlds load offline.
 
+## Contributing
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how
+to build, test and submit changes.
+
 ## Licence
 
-Apache-2.0.
+[BSD 3-Clause](LICENSE) © 2026 Hilmi Dogu Kücüker.
+
+The vendored Falling Rock meshes (see Credits above) remain under their
+original CC-BY licence from OpenRobotics; the BSD-3 licence covers the
+workspace's own code and assets.

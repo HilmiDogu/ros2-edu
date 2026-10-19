@@ -9,7 +9,7 @@
     files that tie Gazebo and ROS 2 together.
   </description>
   <maintainer email="hilmi_dogu.kuecueker@dfki.de">DFKI Robotics Teaching</maintainer>
-  <license>Apache-2.0</license>
+  <license>BSD-3-Clause</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
