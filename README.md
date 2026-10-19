@@ -379,7 +379,8 @@ CC-BY. They are vendored under `src/edu_bringup/models/rock1` and
 ## Contributing
 
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how
-to build, test and submit changes.
+to build, test and submit changes. Notable changes are recorded in the
+[CHANGELOG](CHANGELOG.md).
 
 ## Licence
 
