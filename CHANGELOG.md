@@ -28,6 +28,9 @@ Dates are in YYYY-MM-DD.
 - `up.sh` works from Git Bash on Windows, which was rewriting container
   paths such as `/workspace/docker/build_ws.sh`; its shebang is now on
   the first line.
+- Desktop icons 01–04 no longer go missing: the setup scripts now drop
+  xfdesktop's saved icon layout and arrange the icons in name order, so
+  a layout saved before some icons existed cannot park them off-screen.
 
 ## [0.4.0] - 2026-10-15
 

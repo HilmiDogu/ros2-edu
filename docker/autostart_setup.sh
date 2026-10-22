@@ -79,6 +79,15 @@ if [ -d /workspace/docker/desktop ]; then
 
     # Redraw, in case the desktop was already running when this ran.
     xfdesktop --reload 2>/dev/null || true
+
+    # Lay the icons out fresh, in name order (01, 02, ... 09). xfdesktop
+    # keeps a saved layout per screen size, and one that predates some
+    # icons can leave those icons parked off-screen -- 01-04 vanished this
+    # way while 05 onwards showed. Dropping the saved layouts and
+    # arranging puts every icon back on screen, top to bottom.
+    rm -f "$HOME"/.config/xfce4/desktop/icons.screen*.rc
+    sleep 1
+    xfdesktop --arrange 2>/dev/null || true
 else
     echo "[autostart] WARNING: /workspace/docker/desktop missing."
     echo "[autostart] Is the project directory bind-mounted at /workspace?"
