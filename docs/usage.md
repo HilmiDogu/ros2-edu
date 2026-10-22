@@ -57,8 +57,12 @@ Double-click, in order:
 | **01 Hello ROS 2** | talker + listener together in one window |
 | **02 Gazebo World** | the simulation — Gazebo and RViz |
 | **03 Teleop** | keyboard driving |
-| **04 Navigation** | SLAM mapping |
+| **04 SLAM Mapping** | SLAM mapping |
 | **05 Obstacle Avoider** | the robot drives itself |
+| **06 Moon Rover** | the six-wheel rover on the Moon |
+| **07 Mars Rover** | the six-wheel rover on Mars |
+| **08 Rover Camera** | the rover's forward camera view |
+| **09 Nav2 Waypoints** | click goals in RViz; the rover drives there |
 | **ROS 2 Terminal** | a shell with ROS 2 already sourced |
 
 Each opens a terminal that **stays open after the program exits**, so you

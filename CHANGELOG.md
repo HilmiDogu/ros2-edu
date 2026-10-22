@@ -18,6 +18,27 @@ Dates are in YYYY-MM-DD.
   The vendored Falling Rock meshes keep their original OpenRobotics CC-BY
   licence.
 
+- The README, `docs/usage.md` and the icon list `up.sh` / `up.ps1` print
+  at the end now match the desktop: icon 04 is "04 SLAM Mapping", and 06–09
+  are listed. The README also uses the repository's real folder name
+  (`ros2-edu`) and lists the Nav2 launch file and parameters.
+- The wall-follower exercise's `distance_at` helper now ignores readings
+  outside the lidar's `range_min`/`range_max`, like the worked examples.
+
+### Fixed
+- `up.sh` / `up.ps1` no longer hang at "waiting for the desktop": they
+  probe noVNC directly instead of waiting for a log line that current
+  versions of the base image no longer print.
+- `up.ps1` now installs the desktop launchers instead of failing silently
+  (CRLF and PowerShell 5.1 quoting both broke the bash snippet), and
+  stops if that step fails.
+- `up.sh` works from Git Bash on Windows, which was rewriting container
+  paths such as `/workspace/docker/build_ws.sh`; its shebang is now on
+  the first line.
+- Desktop icons 01–04 no longer go missing: the setup scripts now drop
+  xfdesktop's saved icon layout and arrange the icons in name order, so
+  a layout saved before some icons existed cannot park them off-screen.
+
 ## [0.4.0] - 2026-10-15
 
 Usability pass: a more comfortable desktop, better-reading terrain, and
