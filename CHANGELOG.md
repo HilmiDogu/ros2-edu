@@ -18,6 +18,11 @@ Dates are in YYYY-MM-DD.
   The vendored Falling Rock meshes keep their original OpenRobotics CC-BY
   licence.
 
+- The README, `docs/usage.md` and the icon list `up.sh` / `up.ps1` print
+  at the end now match the desktop: icon 04 is "04 SLAM Mapping", and 06–09
+  are listed. The README also uses the repository's real folder name
+  (`ros2-edu`) and lists the Nav2 launch file and parameters.
+
 ### Fixed
 - `up.sh` / `up.ps1` no longer hang at "waiting for the desktop": they
   probe noVNC directly instead of waiting for a log line that current

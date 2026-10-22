@@ -75,8 +75,13 @@ cat <<EOF
     "01 Hello ROS 2"      - talker/listener, the core pub/sub demo
     "02 Gazebo World"     - EduBot in Gazebo + RViz2, lidar and camera
     "03 Teleop"           - drive the robot with the keyboard
-    "04 Navigation"       - Nav2 autonomous navigation with SLAM
-    "Terminal"            - a shell with ROS 2 already sourced
+    "04 SLAM Mapping"     - build a map with slam_toolbox
+    "05 Obstacle Avoider" - the robot drives itself, avoiding obstacles
+    "06 Moon Rover"       - six-wheel rover on the Moon
+    "07 Mars Rover"       - six-wheel rover on Mars
+    "08 Rover Camera"     - the rover's forward camera view
+    "09 Nav2 Waypoints"   - click goals in RViz; the rover drives there
+    "ROS 2 Terminal"      - a shell with ROS 2 already sourced
 
   Stop with:   docker compose -f docker/docker-compose.yml down
 EOF

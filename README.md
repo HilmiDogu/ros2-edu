@@ -35,7 +35,7 @@ Already have it? Make sure Docker is **running** before you start.
 
 ```powershell
 git clone <this-repository>
-cd ros2-gazebo-edu-max
+cd ros2-edu
 
 .\docker\up.ps1          # Windows PowerShell
 ```
@@ -49,7 +49,7 @@ cd ros2-gazebo-edu-max
 
 ```bash
 git clone <this-repository>
-cd ros2-gazebo-edu-max
+cd ros2-edu
 
 ./docker/up.sh           # macOS, Linux, or Git Bash on Windows
 ```
@@ -91,13 +91,15 @@ You will land on a Linux desktop with numbered icons.
 | **01 Hello ROS 2** | Talker + listener in one window — the pub/sub demo | No |
 | **02 Gazebo World** | EduBot in the classroom, with RViz, lidar and camera | No — this *is* the simulation |
 | **03 Teleop** | Keyboard driving | **Yes** — 02, 06 or 07 |
-| **04 Navigation** | SLAM mapping with slam_toolbox | **Yes** — 02, 06 or 07 |
+| **04 SLAM Mapping** | SLAM mapping with slam_toolbox | **Yes** — 02, 06 or 07 |
 | **05 Obstacle Avoider** | The robot drives itself, avoiding obstacles | **Yes** — 02, 06 or 07 |
 | **06 Moon Rover** | Six-wheel rover on open Moon terrain — hills, drivable craters, scattered boulders, gravity 1.62 m/s² | No — this *is* the simulation |
 | **07 Mars Rover** | Six-wheel rover on open Mars terrain — same, gravity 3.72 m/s² | No — this *is* the simulation |
+| **08 Rover Camera** | The rover's forward camera feed in its own window | **Yes** — 02, 06 or 07 |
+| **09 Nav2 Waypoints** | Click goals in RViz; the rover plans and drives there with Nav2 | **Yes** — 06 or 07 |
 | **ROS 2 Terminal** | A shell with ROS 2 and the workspace already sourced | No |
 
-**Start with 01, then 02.** Icons 03–05 attach to a simulation that is
+**Start with 01, then 02.** Icons 03–05, 08 and 09 attach to a simulation that is
 already running, so start 02 (or 06 / 07) first and leave it open.
 
 Each icon opens a terminal that **stays open after the program exits**,
@@ -182,7 +184,7 @@ command (or restart the container).
 1. Double-click **07 Mars Rover**. Wait for Gazebo (~40 s).
 2. Double-click **03 Teleop**. **Keep that window focused** and press
    `i` to drive forward, `j` / `l` to turn, `k` to stop.
-3. Double-click **04 Navigation** to start SLAM, and watch the map build
+3. Double-click **04 SLAM Mapping** to start SLAM, and watch the map build
    in RViz as you drive.
 
 > **Two things that catch everyone.** In RViz, set **Fixed Frame** to
@@ -259,7 +261,7 @@ Supporting material:
 ## What is in the box
 
 ```
-ros2-gazebo-edu-max/
+ros2-edu/
 ├── docker/                  Container setup — students rarely touch this
 │   ├── Dockerfile           ROS 2 Jazzy + Gazebo Harmonic + noVNC desktop
 │   ├── docker-compose.yml
@@ -276,9 +278,9 @@ ros2-gazebo-edu-max/
 │   │   │   ├── rover/       Six-wheel Perseverance-style rover
 │   │   │   └── rock1, rock6, ground/   Terrain assets for Moon/Mars
 │   │   ├── worlds/          classroom.sdf, moon.sdf, mars.sdf
-│   │   ├── launch/          simulation, teleop, slam
-│   │   ├── config/          slam_toolbox parameters
-│   │   └── rviz/            The RViz display setup
+│   │   ├── launch/          simulation, teleop, slam, navigation
+│   │   ├── config/          slam_toolbox and Nav2 parameters
+│   │   └── rviz/            The RViz display setups
 │   │
 │   ├── edu_py_examples/     Worked, complete, heavily commented nodes
 │   │   └── edu_py_examples/
