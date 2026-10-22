@@ -22,6 +22,8 @@ Dates are in YYYY-MM-DD.
   at the end now match the desktop: icon 04 is "04 SLAM Mapping", and 06–09
   are listed. The README also uses the repository's real folder name
   (`ros2-edu`) and lists the Nav2 launch file and parameters.
+- The wall-follower exercise's `distance_at` helper now ignores readings
+  outside the lidar's `range_min`/`range_max`, like the worked examples.
 
 ### Fixed
 - `up.sh` / `up.ps1` no longer hang at "waiting for the desktop": they

@@ -56,6 +56,8 @@ class WallFollower(Node):
                 continue
             if math.isinf(distance) or math.isnan(distance):
                 continue
+            if distance < self.scan.range_min or distance > self.scan.range_max:
+                continue
             closest = min(closest, distance)
 
         return closest
