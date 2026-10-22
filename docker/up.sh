@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 # Build and start the educational ROS 2 + Gazebo workspace.
 #
@@ -10,6 +9,16 @@ set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 compose_file="${here}/docker-compose.yml"
 container=ros2-gazebo-edu
+
+# Git Bash on Windows rewrites arguments that look like POSIX paths, so
+# `docker exec ... /workspace/docker/build_ws.sh` reached the container
+# as C:/.../Git/workspace/... and failed. Container commands go through
+# this wrapper, which turns that off; host paths such as compose_file
+# still need converting, so it is not set globally. Ignored on Linux
+# and macOS.
+in_container() {
+    MSYS_NO_PATHCONV=1 docker exec "${container}" "$@"
+}
 
 # Host ports. Defaults avoid 6901/5901, which another noVNC container
 # may already hold. Override for this run:  NOVNC_PORT=6910 ./docker/up.sh
@@ -23,7 +32,12 @@ echo "[up] starting container..."
 docker compose -f "${compose_file}" up -d
 
 echo "[up] waiting for the desktop..."
-until docker logs "${container}" 2>&1 | grep -q "noVNC started on TCP port"; do
+# Probe noVNC itself rather than grepping `docker logs` for a startup
+# line: the base image is :latest, and newer versions no longer print
+# "noVNC started on TCP port" to stdout, which left this loop waiting
+# forever on a desktop that was already up. 6901 is the in-container
+# port, so this works whatever NOVNC_PORT the host side was mapped to.
+until in_container curl -sf -o /dev/null http://localhost:6901/vnc.html 2>/dev/null; do
     if ! docker ps --filter "name=${container}" --format '{{.Status}}' | grep -q Up; then
         echo "[up] container exited unexpectedly:" >&2
         docker logs --tail 40 "${container}" >&2
@@ -38,7 +52,7 @@ echo "[up] installing desktop launchers..."
 # They exist because the noVNC clipboard does not bridge to the host:
 # anything a student would otherwise have to retype by hand in the
 # browser GUI is a double-click instead.
-docker exec "${container}" bash -lc '
+in_container bash -lc '
     set -e
     mkdir -p "$HOME/Desktop"
     cp /workspace/docker/desktop/*.desktop "$HOME/Desktop/"
@@ -49,7 +63,7 @@ docker exec "${container}" bash -lc '
 '
 
 echo "[up] building the ROS 2 workspace (colcon)..."
-docker exec "${container}" bash -lc '/workspace/docker/build_ws.sh'
+in_container bash -lc '/workspace/docker/build_ws.sh'
 
 cat <<EOF
 

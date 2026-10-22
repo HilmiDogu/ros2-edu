@@ -18,6 +18,17 @@ Dates are in YYYY-MM-DD.
   The vendored Falling Rock meshes keep their original OpenRobotics CC-BY
   licence.
 
+### Fixed
+- `up.sh` / `up.ps1` no longer hang at "waiting for the desktop": they
+  probe noVNC directly instead of waiting for a log line that current
+  versions of the base image no longer print.
+- `up.ps1` now installs the desktop launchers instead of failing silently
+  (CRLF and PowerShell 5.1 quoting both broke the bash snippet), and
+  stops if that step fails.
+- `up.sh` works from Git Bash on Windows, which was rewriting container
+  paths such as `/workspace/docker/build_ws.sh`; its shebang is now on
+  the first line.
+
 ## [0.4.0] - 2026-10-15
 
 Usability pass: a more comfortable desktop, better-reading terrain, and
